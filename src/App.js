@@ -7,7 +7,7 @@ import Header from './components/header';
 import List from './components/list';
 
 let itemNewPrice;
-let itemNewName;
+let newValue;
 
 class App extends Component {
   constructor() {
@@ -29,9 +29,7 @@ class App extends Component {
           this.setState({
             user
           });
-          //this.getOrdersFromDb();
-          this.getAllItemsFromDB();
-          //this.getAllArchivedItemsFromDB();
+          this.getOrdersFromDb();
         });
   };
 
@@ -83,156 +81,90 @@ class App extends Component {
     });
   };
 
-  deleteItem = (itemId) => {
-    const itemRef = this.getDataFromFirebase(`/orderItems/${itemId}`);
-    itemRef.remove();
-  };
-
-  incrementItem = (itemId) => {
+  manipulateItem = (itemId, action) => {
 
     // eslint-disable-next-line
-    this.state.allItems.map(function (item) {
-      if (item.itemId === itemId) {
-        itemNewPrice = item.itemNewPrice + item.itemInitialPrice;
-      }
-    });
+    this.state.allItems.map((item) => {
 
-    this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-      itemNewPrice: itemNewPrice
+      if (item.itemId === itemId) {
+
+        switch(action) {
+          case 'increment': {
+            itemNewPrice = item.itemNewPrice + item.itemInitialPrice;
+            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
+              itemNewPrice: itemNewPrice
+            });
+            break;
+          }
+          case 'decrement': {
+            itemNewPrice = item.itemNewPrice - item.itemInitialPrice;
+            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
+              itemNewPrice: itemNewPrice
+            });
+            break;
+          }
+          case 'delete': {
+            const itemRef = this.getDataFromFirebase(`/orderItems/${itemId}`);
+            itemRef.remove();
+            break;
+          }
+          case item.itemName: {
+            newValue = prompt('new name', '');
+            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
+              itemName: newValue
+            });
+            break;
+          }
+          case item.itemInitialPrice: {
+            newValue = Number(prompt('new price', ''));
+            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
+              itemInitialPrice: newValue
+            });
+            break;
+          }
+          default: // Do nothing
+        }
+      }
     });
   };
 
-  decrementItem = (itemId) => {
-
-    // eslint-disable-next-line
-    this.state.allItems.map(function (item) {
-      if (item.itemId === itemId) {
-        itemNewPrice = item.itemNewPrice - item.itemInitialPrice;
-      }
-    });
-
-    this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-      itemNewPrice: itemNewPrice
-    });
-
-  };
-
-  updateName = (itemId) => {
-
-    // eslint-disable-next-line
-    this.state.allItems.map(function (item) {
-      if (item.itemId === itemId) {
-        itemNewName = 'test';
-      }
-    });
-
-    this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-      itemName: itemNewName
-    });
-
-  };
-
-  //getOrdersFromDb = () => {
-  //  this.getDataFromFirebase('orderItems').on('value', (snapshot) => {
-  //
-  //    let ordersSnapshot = snapshot.val();
-  //    let items = {};
-  //    let newState = [];
-  //
-  //    for (let item in ordersSnapshot) {
-  //
-  //      if(ordersSnapshot.hasOwnProperty(item)) {
-  //
-  //        let order = ordersSnapshot[item];
-  //        let userName = order["user"];
-  //
-  //        if (this.state.user.email === userName) {
-  //          items[item] = order;
-  //
-  //          newState.unshift({
-  //            itemId: item,
-  //            itemName: items[item].itemName,
-  //            itemInitialPrice: items[item].itemInitialPrice,
-  //            user: items[item].user
-  //          });
-  //        }
-  //
-  //        this.setState({
-  //          allItems: newState
-  //        });
-  //      }
-  //    }
-  //  });
-  //};
-
-  getAllItemsFromDB = () => {
+  getOrdersFromDb = () => {
     this.getDataFromFirebase('orderItems').on('value', (snapshot) => {
 
-      let gotItems = snapshot.val();
+      let ordersSnapshot = snapshot.val();
       let items = {};
-
       let newState = [];
-      let allItemsNewPrices = [];
-      let allItemsTime = [];
-      let getCurrency = [];
-      let getMaxSpend = [];
-      let getTheme = [];
 
-      for (let item in gotItems) {
-        let obj = gotItems[item];
-        let userName = obj["user"];
+      for (let item in ordersSnapshot) {
 
-        if (this.state.user.email === userName) {
-          items[item] = obj;
+        if (ordersSnapshot.hasOwnProperty(item)) {
 
-          allItemsNewPrices.push(Number(items[item].itemNewPrice));
-          allItemsTime.push(items[item].currentTime);
-          getCurrency.push(items[item].currency);
-          getMaxSpend.push(items[item].maxSpend);
-          getTheme.push(items[item].theme);
+        let order = ordersSnapshot[item];
+        let userName = order["user"];
 
-          newState.unshift({
-            itemId: item,
-            itemName: items[item].itemName,
-            itemInitialAmount: items[item].itemInitialAmount,
-            itemNewAmount: items[item].itemNewAmount,
-            itemInitialPrice: items[item].itemInitialPrice,
-            itemNewPrice: items[item].itemNewPrice,
-            currentDate: items[item].currentDate,
-            currentTime: items[item].currentTime,
-            user: items[item].user,
-            archiveId: items[item].archiveId,
-            currency: items[item].currency,
-            maxSpend: items[item].maxSpend,
-            theme: items[item].theme
-          });
+          if (this.state.user.email === userName) {
+            items[item] = order;
 
-          this.setState({
-            archiveId: items[item].archiveId
-          });
+            newState.unshift({
+              itemId: item,
+              itemName: items[item].itemName,
+              itemInitialPrice: items[item].itemInitialPrice,
+              itemNewPrice: items[item].itemNewPrice,
+              user: items[item].user
+            });
+          }
         }
       }
 
-      let totalPrice = allItemsNewPrices.reduce((a, b) => a + b, 0);
-
-      let lastItemTime = allItemsTime.sort(function (a, b) {
-        return new Date('1970/01/01 ' + a) - new Date('1970/01/01 ' + b);
-      });
-
-      let lastItemTimeItem = lastItemTime[lastItemTime.length - 1];
-
       this.setState({
-        allItems: newState,
-        totalPrice: totalPrice,
-        lastOrderTime: lastItemTimeItem
+        allItems: newState
       });
     });
   };
 
   componentDidMount = () => {
     this.getCurrentUser();
-    //this.getOrdersFromDb();
-    this.getAllItemsFromDB();
+    this.getOrdersFromDb();
   };
 
   render() {
@@ -258,12 +190,12 @@ class App extends Component {
               {this.state.allItems.map((item) => {
                 return(
                     <li key={item.itemId}>
-                      <p onClick={() => this.updateName(item.itemId)}>{item.itemName}</p>
-                      <p>{item.itemInitialPrice}</p>
+                      <p onClick={() => this.manipulateItem(item.itemId, item.itemName)}>{item.itemName}</p>
+                      <p onClick={() => this.manipulateItem(item.itemId, item.itemInitialPrice)}>{item.itemInitialPrice}</p>
                       <p>{item.itemNewPrice}</p>
-                      <button onClick={() => this.incrementItem(item.itemId)}>+1</button>
-                      <button onClick={() => this.decrementItem(item.itemId)}>-1</button>
-                      <button onClick={() => this.deleteItem(item.itemId)}>delete</button>
+                      <button onClick={() => this.manipulateItem(item.itemId, 'increment')}>+1</button>
+                      <button onClick={() => this.manipulateItem(item.itemId, 'decrement')}>-1</button>
+                      <button onClick={() => this.manipulateItem(item.itemId, 'delete')}>delete</button>
                     </li>
                 )
               })}
