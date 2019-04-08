@@ -110,15 +110,21 @@ class App extends Component {
           }
           case item.itemName: {
             newValue = prompt('new name', '');
+            if(newValue === null) {
+              return
+            }
             this.getDataFromFirebase(`/orderItems/${itemId}`).update({
               itemName: newValue
             });
             break;
           }
           case item.itemInitialPrice: {
-            newValue = Number(prompt('new price', ''));
+            newValue = prompt('new price', '');
+            if(newValue === null) {
+              return
+            }
             this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-              itemInitialPrice: newValue
+              itemInitialPrice: Number(newValue)
             });
             break;
           }
