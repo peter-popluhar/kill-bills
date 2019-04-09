@@ -6,8 +6,10 @@ import Form from './components/form';
 import Header from './components/header';
 import List from './components/list';
 
-let itemNewPrice;
-let newValue;
+import './App.css'
+
+//import getOrdersFromDb from './components/getOrdersFromDb';
+
 
 class App extends Component {
   constructor() {
@@ -81,61 +83,8 @@ class App extends Component {
     });
   };
 
-  manipulateItem = (itemId, action) => {
-
-    // eslint-disable-next-line
-    this.state.allItems.map((item) => {
-
-      if (item.itemId === itemId) {
-
-        switch(action) {
-          case 'increment': {
-            itemNewPrice = item.itemNewPrice + item.itemInitialPrice;
-            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-              itemNewPrice: itemNewPrice
-            });
-            break;
-          }
-          case 'decrement': {
-            itemNewPrice = item.itemNewPrice - item.itemInitialPrice;
-            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-              itemNewPrice: itemNewPrice
-            });
-            break;
-          }
-          case 'delete': {
-            const itemRef = this.getDataFromFirebase(`/orderItems/${itemId}`);
-            itemRef.remove();
-            break;
-          }
-          case item.itemName: {
-            newValue = prompt('new name', '');
-            if(newValue === null) {
-              return
-            }
-            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-              itemName: newValue
-            });
-            break;
-          }
-          case item.itemInitialPrice: {
-            newValue = prompt('new price', '');
-            if(newValue === null) {
-              return
-            }
-            this.getDataFromFirebase(`/orderItems/${itemId}`).update({
-              itemInitialPrice: Number(newValue)
-            });
-            break;
-          }
-          default: // Do nothing
-        }
-      }
-    });
-  };
-
   getOrdersFromDb = () => {
-    this.getDataFromFirebase('orderItems').on('value', (snapshot) => {
+      firebase.database().ref('orderItems').on('value', (snapshot) => {
 
       let ordersSnapshot = snapshot.val();
       let items = {};
@@ -147,7 +96,6 @@ class App extends Component {
 
         let order = ordersSnapshot[item];
         let userName = order["user"];
-
           if (this.state.user.email === userName) {
             items[item] = order;
 
@@ -168,12 +116,31 @@ class App extends Component {
     });
   };
 
+    clearCurrentBill = () => {
+        let ref = firebase.database().ref('orderItems')
+
+        ref.orderByChild('user').equalTo(this.state.user.email).once('value', function(snapshot){
+            let updates = {};
+
+            snapshot.forEach(function(child) {
+                updates[child.key] = null;
+            });
+
+            ref.update(updates);
+        });
+
+        this.setState({
+            archiveId: false
+        });
+    };
+
   componentDidMount = () => {
     this.getCurrentUser();
     this.getOrdersFromDb();
   };
 
   render() {
+      console.log(this.state)
     return (
       <>
         <Header>
@@ -183,32 +150,19 @@ class App extends Component {
           }
         </Header>
 
-      { this.state.user ?
+      { this.state.user &&
           <>
-            <p>form</p>
             <Form
                 handleSubmit={this.handleSubmit}
                 handleChange={this.handleChange}
                 itemName={this.state.itemName}
                 itemInitialPrice={this.state.itemInitialPrice}
             />
-            <ul>
-              {this.state.allItems.map((item) => {
-                return(
-                    <li key={item.itemId}>
-                      <p onClick={() => this.manipulateItem(item.itemId, item.itemName)}>{item.itemName}</p>
-                      <p onClick={() => this.manipulateItem(item.itemId, item.itemInitialPrice)}>{item.itemInitialPrice}</p>
-                      <p>{item.itemNewPrice}</p>
-                      <button onClick={() => this.manipulateItem(item.itemId, 'increment')}>+1</button>
-                      <button onClick={() => this.manipulateItem(item.itemId, 'decrement')}>-1</button>
-                      <button onClick={() => this.manipulateItem(item.itemId, 'delete')}>delete</button>
-                    </li>
-                )
-              })}
-            </ul>
+          <button onClick={this.clearCurrentBill}>clear</button>
+            <div className="list">
+               <List allItems={this.state.allItems} />
+            </div>
           </>
-           :
-          <button onClick={this.login}>Login</button>
       }
       </>
     );

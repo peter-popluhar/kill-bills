@@ -1,10 +1,10 @@
 import React from 'react';
 
 const Header = (props) => (
-    <>
-        <p>header:</p>
+    <div className="header">
+        header:
         {props.children}
-    </>
+    </div>
 );
 
 export default Header;
