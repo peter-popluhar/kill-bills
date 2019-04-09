@@ -5,11 +5,7 @@ import { capitalize } from 'lodash';
 import Form from './components/form';
 import Header from './components/header';
 import List from './components/list';
-
 import './App.css'
-
-//import getOrdersFromDb from './components/getOrdersFromDb';
-
 
 class App extends Component {
   constructor() {
@@ -17,9 +13,6 @@ class App extends Component {
 
     this.state = {
       user: null,
-      itemName: '',
-      itemInitialPrice: '',
-      itemNewPrice: '',
       allItems: []
     };
   }
@@ -62,27 +55,6 @@ class App extends Component {
     return firebase.database().ref(data);
   };
 
-  handleChange = (e) => this.setState({[e.target.name]: e.target.value});
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    const singleBillItem = {
-      itemName: capitalize(this.state.itemName),
-      itemInitialPrice: Number(this.state.itemInitialPrice),
-      user: this.state.user.email,
-      itemNewPrice: Number(this.state.itemInitialPrice)
-    };
-
-
-    this.getDataFromFirebase('orderItems').push(singleBillItem);
-
-    this.setState({
-      itemName: '',
-      itemInitialPrice: ''
-    });
-  };
-
   getOrdersFromDb = () => {
       firebase.database().ref('orderItems').on('value', (snapshot) => {
 
@@ -116,23 +88,7 @@ class App extends Component {
     });
   };
 
-    clearCurrentBill = () => {
-        let ref = firebase.database().ref('orderItems')
 
-        ref.orderByChild('user').equalTo(this.state.user.email).once('value', function(snapshot){
-            let updates = {};
-
-            snapshot.forEach(function(child) {
-                updates[child.key] = null;
-            });
-
-            ref.update(updates);
-        });
-
-        this.setState({
-            archiveId: false
-        });
-    };
 
   componentDidMount = () => {
     this.getCurrentUser();
@@ -140,7 +96,6 @@ class App extends Component {
   };
 
   render() {
-      console.log(this.state)
     return (
       <>
         <Header>
@@ -152,13 +107,7 @@ class App extends Component {
 
       { this.state.user &&
           <>
-            <Form
-                handleSubmit={this.handleSubmit}
-                handleChange={this.handleChange}
-                itemName={this.state.itemName}
-                itemInitialPrice={this.state.itemInitialPrice}
-            />
-          <button onClick={this.clearCurrentBill}>clear</button>
+          <Form user={this.state.user} />
             <div className="list">
                <List allItems={this.state.allItems} />
             </div>
