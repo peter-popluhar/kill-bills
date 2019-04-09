@@ -51,10 +51,6 @@ class App extends Component {
     });
   };
 
-  getDataFromFirebase = (data) => {
-    return firebase.database().ref(data);
-  };
-
   getOrdersFromDb = () => {
       firebase.database().ref('orderItems').on('value', (snapshot) => {
 
@@ -87,8 +83,6 @@ class App extends Component {
       });
     });
   };
-
-
 
   componentDidMount = () => {
     this.getCurrentUser();
