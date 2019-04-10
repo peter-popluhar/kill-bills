@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import firebase from './firebase.js';
 import { auth, provider } from './firebase.js';
-import { capitalize } from 'lodash';
 import Form from './components/form';
 import Header from './components/header';
 import List from './components/list';
 import './App.css'
 
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      user: null,
-      allItems: []
+    state = {
+        user: null,
+        allItems: []
     };
-  }
 
   login = () => {
     auth.signInWithPopup(provider)
@@ -84,24 +79,27 @@ class App extends Component {
     });
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.getCurrentUser();
     this.getOrdersFromDb();
   };
 
   render() {
+
+      const {user} = this.state;
+
     return (
       <>
         <Header>
-          { !this.state.user ?
+          { !user ?
               <button onClick={this.login}>Login</button> :
               <button onClick={this.logout}>Logout</button>
           }
         </Header>
 
-      { this.state.user &&
+      { user &&
           <>
-          <Form user={this.state.user} />
+            <Form user={this.state.user} />
             <div className="list">
                <List allItems={this.state.allItems} />
             </div>

@@ -3,15 +3,11 @@ import firebase from './../firebase.js';
 import { capitalize } from 'lodash';
 
 class Form extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            itemName: '',
-            itemInitialPrice: '',
-            itemNewPrice: ''
-        };
-    }
+    state = {
+        itemName: '',
+        itemInitialPrice: '',
+        itemNewPrice: ''
+    };
 
     handleChange = (e) => this.setState({[e.target.name]: e.target.value});
 
@@ -48,12 +44,12 @@ class Form extends Component {
     };
 
     render() {
-
+        const {itemName, itemInitialPrice} = this.state;
         return (
             <div className="form">form:
                 <form onSubmit={this.handleSubmit}>
-                    <input type="text" name="itemName" onChange={this.handleChange} value={this.state.itemName} />
-                    <input type="number" name="itemInitialPrice" onChange={this.handleChange} value={this.state.itemInitialPrice} />
+                    <input type="text" name="itemName" onChange={this.handleChange} value={itemName} />
+                    <input type="number" name="itemInitialPrice" onChange={this.handleChange} value={itemInitialPrice} />
                     <input type="submit"/>
                 </form>
                 <button onClick={this.clearCurrentBill}>delete</button>
