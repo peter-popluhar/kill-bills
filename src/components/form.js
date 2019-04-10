@@ -3,6 +3,9 @@ import firebase from './../firebase.js';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
 
+let itemsDatabase = firebase.database().ref('orderItems');
+let archiveDatabase = firebase.database().ref('archive');
+
 class Form extends Component {
     state = {
         itemName: '',
@@ -22,7 +25,7 @@ class Form extends Component {
             itemNewPrice: Number(this.state.itemInitialPrice)
         };
 
-        firebase.database().ref('orderItems').push(singleBillItem);
+        itemsDatabase.push(singleBillItem);
 
         this.setState({
             itemName: '',
@@ -31,16 +34,62 @@ class Form extends Component {
     };
 
     clearCurrentBill = () => {
-        let ref = firebase.database().ref('orderItems')
 
-        ref.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
+        itemsDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
                 updates[child.key] = null;
             });
 
-            ref.update(updates);
+            itemsDatabase.update(updates);
+        });
+    };
+
+    archiveCurrentBill = (e) => {
+        e.preventDefault();
+
+        let keys = [];
+
+        itemsDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
+            snapshot.forEach(function(child) {
+                keys.push([child.key]);
+            });
+        }).then(() => {
+
+            itemsDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot)  {
+
+                archiveDatabase.update( snapshot.val(), function(error) {
+
+                    if( !error ) {
+                        let updates = {};
+
+                        snapshot.forEach(function(child) {
+                            updates[child.key] = null;
+                        });
+
+                        itemsDatabase.update(updates);
+                    }
+                    else if( typeof(console) !== 'undefined' && console.error ) {
+                        console.error(error);
+                    }
+                });
+            }).then(() => {
+
+            });
+        });
+    };
+
+    clearArchive = () => {
+
+        archiveDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
+            let updates = {};
+
+            snapshot.forEach(function(child) {
+                updates[child.key] = null;
+            });
+
+            archiveDatabase.update(updates);
         });
     };
 
@@ -54,6 +103,8 @@ class Form extends Component {
                     <input type="submit"/>
                 </form>
                 <button onClick={this.clearCurrentBill}>delete</button>
+                <button onClick={this.archiveCurrentBill}>archive</button>
+                <button onClick={this.clearArchive}>clear archive</button>
             </div>
         )
     }

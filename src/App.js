@@ -83,8 +83,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => (
     {
-        user: state.userReducer.user,
-        payload: state.dataReducer.payload
+        user: state.userReducer.user
     }
 );
 
