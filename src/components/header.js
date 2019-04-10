@@ -9,8 +9,6 @@ const Header = ({user, login, logout}) => {
         auth.signInWithPopup(provider)
             .then((result) => {
                 const user = result.user;
-                console.log(user)
-                // this.getOrdersFromDb();
                 login(user)
             });
     };
@@ -37,7 +35,7 @@ const mapStateToProps = (state) => (
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (user) => dispatch(loginAction(user)),
+        login: (payload) => dispatch(loginAction(payload)),
         logout: () => dispatch(logoutAction())
     }
 };

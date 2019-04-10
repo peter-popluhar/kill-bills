@@ -13,38 +13,38 @@ class App extends Component {
         allItems: []
     };
 
-  getOrdersFromDb = () => {
-      firebase.database().ref('orderItems').on('value', (snapshot) => {
+    getOrdersFromDb = () => {
+        firebase.database().ref('orderItems').on('value', (snapshot) => {
 
-      let ordersSnapshot = snapshot.val();
-      let items = {};
-      let newState = [];
+            let ordersSnapshot = snapshot.val();
+            let items = {};
+            let newState = [];
 
-      for (let item in ordersSnapshot) {
+            for (let item in ordersSnapshot) {
 
-        if (ordersSnapshot.hasOwnProperty(item)) {
+                if (ordersSnapshot.hasOwnProperty(item)) {
 
-        let order = ordersSnapshot[item];
-        let userName = order["user"];
-          if (this.props.user.email === userName) {
-            items[item] = order;
+                    let order = ordersSnapshot[item];
+                    let userName = order["user"];
+                    if (this.props.user.email === userName) {
+                        items[item] = order;
 
-            newState.unshift({
-              itemId: item,
-              itemName: items[item].itemName,
-              itemInitialPrice: items[item].itemInitialPrice,
-              itemNewPrice: items[item].itemNewPrice,
-              user: items[item].user
+                        newState.unshift({
+                            itemId: item,
+                            itemName: items[item].itemName,
+                            itemInitialPrice: items[item].itemInitialPrice,
+                            itemNewPrice: items[item].itemNewPrice,
+                            user: items[item].user
+                        });
+                    }
+                }
+            }
+
+            this.setState({
+                allItems: newState
             });
-          }
-        }
-      }
-
-      this.setState({
-        allItems: newState
-      });
-    });
-  };
+        });
+    };
 
     // if user is logged, send him to redux store
     getUserFn = () => {
@@ -56,30 +56,31 @@ class App extends Component {
     };
 
   componentDidMount() {
-    this.getUserFn();
+      this.getUserFn();
+
     this.getOrdersFromDb();
   };
 
-  render() {
+    render() {
 
-      const {allItems} = this.state;
-      const {user} = this.props;
+        const {allItems} = this.state;
+        const {user} = this.props;
 
-    return (
-      <>
-        <Header />
+        return (
+            <>
+                <Header />
 
-      { user &&
-          <>
-            <Form user={user} />
-            <div className="list">
-               <List allItems={allItems} />
-            </div>
-          </>
-      }
-      </>
-    );
-  }
+                { user &&
+                    <>
+                        <Form user={user} />
+                        <div className="list">
+                            <List allItems={allItems} />
+                        </div>
+                    </>
+                }
+            </>
+        );
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {
