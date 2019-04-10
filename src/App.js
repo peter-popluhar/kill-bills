@@ -5,46 +5,13 @@ import Form from './components/form';
 import Header from './components/header';
 import List from './components/list';
 import './App.css'
+import {getUserAction} from './appAction';
+import {connect} from 'react-redux';
 
 class App extends Component {
     state = {
-        user: null,
         allItems: []
     };
-
-  login = () => {
-    auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          this.setState({
-            user
-          });
-          this.getOrdersFromDb();
-        });
-  };
-
-  logout = () => {
-    auth.signOut()
-        .then(() => {
-          this.setState({
-            user: null,
-            itemName: '',
-            itemInitialPrice: '',
-            allItems: []
-          });
-        });
-  };
-
-  getCurrentUser = () => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({
-          user: user,
-          uid: user.uid
-        });
-      }
-    });
-  };
 
   getOrdersFromDb = () => {
       firebase.database().ref('orderItems').on('value', (snapshot) => {
@@ -59,7 +26,7 @@ class App extends Component {
 
         let order = ordersSnapshot[item];
         let userName = order["user"];
-          if (this.state.user.email === userName) {
+          if (this.props.user.email === userName) {
             items[item] = order;
 
             newState.unshift({
@@ -79,29 +46,34 @@ class App extends Component {
     });
   };
 
+    // if user is logged, send him to redux store
+    getUserFn = () => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.props.getUser(user);
+            }
+        });
+    };
+
   componentDidMount() {
-    this.getCurrentUser();
+    this.getUserFn();
     this.getOrdersFromDb();
   };
 
   render() {
 
-      const {user} = this.state;
+      const {allItems} = this.state;
+      const {user} = this.props;
 
     return (
       <>
-        <Header>
-          { !user ?
-              <button onClick={this.login}>Login</button> :
-              <button onClick={this.logout}>Logout</button>
-          }
-        </Header>
+        <Header />
 
       { user &&
           <>
-            <Form user={this.state.user} />
+            <Form user={user} />
             <div className="list">
-               <List allItems={this.state.allItems} />
+               <List allItems={allItems} />
             </div>
           </>
       }
@@ -110,4 +82,19 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getUser: (user) => dispatch(getUserAction(user))
+    }
+};
+
+const mapStateToProps = (state) => (
+    {
+        user: state.userReducer.user
+    }
+);
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);
