@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from './../firebase.js';
 import { capitalize } from 'lodash';
+import {connect} from 'react-redux';
 
 class Form extends Component {
     state = {
@@ -58,4 +59,12 @@ class Form extends Component {
     }
 }
 
-export default Form;
+const mapStateToProps = (state) => (
+    {
+        user: state.userReducer.user
+    }
+);
+
+export default connect(
+    mapStateToProps
+)(Form);

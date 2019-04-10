@@ -65,7 +65,7 @@ class App extends Component {
 
                 { user &&
                     <>
-                        <Form user={user} />
+                        <Form />
                         <List />
                     </>
                 }
