@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import firebase from './firebase.js';
-import { auth, provider } from './firebase.js';
+import { auth } from './firebase.js';
 import Form from './components/form';
 import Header from './components/header';
 import List from './components/list';
 import './App.css'
-import {getUserAction} from './appAction';
+import {getUserAction, getOrdersFromDbAction} from './appAction';
 import {connect} from 'react-redux';
 
 class App extends Component {
-    state = {
-        allItems: []
-    };
 
-    getOrdersFromDb = () => {
+    getOrdersFromDbFn = () => {
         firebase.database().ref('orderItems').on('value', (snapshot) => {
 
             let ordersSnapshot = snapshot.val();
@@ -40,9 +37,7 @@ class App extends Component {
                 }
             }
 
-            this.setState({
-                allItems: newState
-            });
+            this.props.getData(newState);
         });
     };
 
@@ -55,15 +50,13 @@ class App extends Component {
         });
     };
 
-  componentDidMount() {
-      this.getUserFn();
-
-    this.getOrdersFromDb();
-  };
+    componentDidMount() {
+        this.getUserFn();
+        this.getOrdersFromDbFn();
+    };
 
     render() {
 
-        const {allItems} = this.state;
         const {user} = this.props;
 
         return (
@@ -73,9 +66,7 @@ class App extends Component {
                 { user &&
                     <>
                         <Form user={user} />
-                        <div className="list">
-                            <List allItems={allItems} />
-                        </div>
+                        <List />
                     </>
                 }
             </>
@@ -85,13 +76,15 @@ class App extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getUser: (user) => dispatch(getUserAction(user))
+        getUser: (user) => dispatch(getUserAction(user)),
+        getData: (allOrders) => dispatch(getOrdersFromDbAction(allOrders))
     }
 };
 
 const mapStateToProps = (state) => (
     {
-        user: state.userReducer.user
+        user: state.userReducer.user,
+        payload: state.dataReducer.payload
     }
 );
 

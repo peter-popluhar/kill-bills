@@ -1,15 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {auth, provider} from '../firebase';
-import {loginAction, logoutAction} from '../appAction';
+import {getUserAction, logoutAction} from '../appAction';
 
-const Header = ({user, login, logout}) => {
+const Header = ({user, getUser, logout}) => {
 
     const loginFn = () => {
         auth.signInWithPopup(provider)
             .then((result) => {
                 const user = result.user;
-                login(user)
+                getUser(user);
             });
     };
 
@@ -35,7 +35,7 @@ const mapStateToProps = (state) => (
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (payload) => dispatch(loginAction(payload)),
+        getUser: (user) => dispatch(getUserAction(user)),
         logout: () => dispatch(logoutAction())
     }
 };
