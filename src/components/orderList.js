@@ -57,8 +57,10 @@ const OrderList = ({allItems}) => {
                         if(newValue === null) {
                             return
                         }
+                        itemNewPrice = newValue * item.itemNewAmount;
                         itemRef.update({
-                            itemInitialPrice: Number(newValue)
+                            itemInitialPrice: Number(newValue),
+                            itemNewPrice: itemNewPrice
                         });
                         break;
                     }
