@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
 
-const List = ({allItems}) => {
+const OrderList = ({allItems}) => {
     let itemNewPrice;
     let newValue;
 
@@ -72,6 +72,7 @@ const List = ({allItems}) => {
                                    <p onClick={() => manipulateItem(item.itemId, item.itemName)}>{item.itemName}</p>
                                    <p onClick={() => manipulateItem(item.itemId, item.itemInitialPrice)}>{item.itemInitialPrice}</p>
                                    <p>{item.itemNewPrice}</p>
+                                   <p>{item.currentTime}</p>
                                    <button onClick={() => manipulateItem(item.itemId, 'increment')}>+1</button>
                                    <button onClick={() => manipulateItem(item.itemId, 'decrement')}>-1</button>
                                    <button onClick={() => manipulateItem(item.itemId, 'delete')}>delete</button>
@@ -93,4 +94,4 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps
-)(List);
+)(OrderList);

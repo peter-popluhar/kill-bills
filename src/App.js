@@ -3,7 +3,7 @@ import firebase from './firebase.js';
 import { auth } from './firebase.js';
 import Form from './components/form';
 import Header from './components/header';
-import List from './components/list';
+import OrderList from './components/orderList';
 import './App.css'
 import {getUserAction, getOrdersFromDbAction} from './appAction';
 import {connect} from 'react-redux';
@@ -31,7 +31,9 @@ class App extends Component {
                             itemName: items[item].itemName,
                             itemInitialPrice: items[item].itemInitialPrice,
                             itemNewPrice: items[item].itemNewPrice,
-                            user: items[item].user
+                            user: items[item].user,
+                            currentDate: items[item].currentDate,
+                            currentTime: items[item].currentTime
                         });
                     }
                 }
@@ -66,7 +68,7 @@ class App extends Component {
                 { user &&
                     <>
                         <Form />
-                        <List />
+                        <OrderList />
                     </>
                 }
             </>

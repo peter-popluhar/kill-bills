@@ -1,41 +1,46 @@
-import React, { Component } from 'react';
+import React, { useState, useReducer } from 'react';
 import firebase from './../firebase.js';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
+import {itemsDatabase,archiveDatabase,getOrderDate,getCurrentItemTime} from './../utils';
 
-let itemsDatabase = firebase.database().ref('orderItems');
-let archiveDatabase = firebase.database().ref('archive');
+const Form = ({user}) => {
 
-class Form extends Component {
-    state = {
-        itemName: '',
-        itemInitialPrice: '',
-        itemNewPrice: ''
+    const [input, setInputValue] = useReducer(
+        (state, newState) => ({...state, ...newState}),
+        {
+            itemName: '',
+            itemInitialPrice: ''
+        }
+    );
+
+    const handleChange = e => {
+        setInputValue({[e.target.name]: e.target.value});
     };
 
-    handleChange = (e) => this.setState({[e.target.name]: e.target.value});
-
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         const singleBillItem = {
-            itemName: capitalize(this.state.itemName),
-            itemInitialPrice: Number(this.state.itemInitialPrice),
-            user: this.props.user.email,
-            itemNewPrice: Number(this.state.itemInitialPrice)
+            currentDate: getOrderDate(),
+            currentTime: getCurrentItemTime(),
+            itemName: capitalize(input.itemName),
+            itemInitialPrice: Number(input.itemInitialPrice),
+            user: user.email,
+            itemNewPrice: Number(input.itemInitialPrice)
         };
 
         itemsDatabase.push(singleBillItem);
 
-        this.setState({
+        setInputValue({
             itemName: '',
             itemInitialPrice: ''
-        });
+        })
     };
 
-    clearCurrentBill = () => {
+    const clearCurrentBill = () => {
 
-        itemsDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
+        itemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
@@ -46,18 +51,18 @@ class Form extends Component {
         });
     };
 
-    archiveCurrentBill = (e) => {
+    const archiveCurrentBill = (e) => {
         e.preventDefault();
 
         let keys = [];
 
-        itemsDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
+        itemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             snapshot.forEach(function(child) {
                 keys.push([child.key]);
             });
         }).then(() => {
 
-            itemsDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot)  {
+            itemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot)  {
 
                 archiveDatabase.update( snapshot.val(), function(error) {
 
@@ -80,9 +85,9 @@ class Form extends Component {
         });
     };
 
-    clearArchive = () => {
+    const clearArchive = () => {
 
-        archiveDatabase.orderByChild('user').equalTo(this.props.user.email).once('value', function(snapshot){
+        archiveDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
@@ -93,21 +98,19 @@ class Form extends Component {
         });
     };
 
-    render() {
-        const {itemName, itemInitialPrice} = this.state;
-        return (
-            <div className="form">form:
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" name="itemName" onChange={this.handleChange} value={itemName} />
-                    <input type="number" name="itemInitialPrice" onChange={this.handleChange} value={itemInitialPrice} />
-                    <input type="submit"/>
-                </form>
-                <button onClick={this.clearCurrentBill}>delete</button>
-                <button onClick={this.archiveCurrentBill}>archive</button>
-                <button onClick={this.clearArchive}>clear archive</button>
-            </div>
-        )
-    }
+    return (
+        <div className="form">form:
+            <form onSubmit={handleSubmit}>
+                <input type="text" name="itemName" onChange={handleChange} value={input.itemName} />
+                <input type="number" name="itemInitialPrice" onChange={handleChange} value={input.itemInitialPrice} />
+                <input type="submit"/>
+            </form>
+            <button onClick={clearCurrentBill}>delete</button>
+            <button onClick={archiveCurrentBill}>archive</button>
+            <button onClick={clearArchive}>clear archive</button>
+        </div>
+    )
+
 }
 
 const mapStateToProps = (state) => (
