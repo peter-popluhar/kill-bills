@@ -29,11 +29,13 @@ class App extends Component {
                         newState.unshift({
                             itemId: item,
                             itemName: items[item].itemName,
+                            itemInitialAmount: items[item].itemInitialAmount,
+                            itemNewAmount: items[item].itemNewAmount,
                             itemInitialPrice: items[item].itemInitialPrice,
                             itemNewPrice: items[item].itemNewPrice,
-                            user: items[item].user,
                             currentDate: items[item].currentDate,
-                            currentTime: items[item].currentTime
+                            currentTime: items[item].currentTime,
+                            user: items[item].user
                         });
                     }
                 }

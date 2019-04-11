@@ -1,9 +1,11 @@
 import React from 'react';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
+import {getCurrentItemTime} from './../utils';
 
 const OrderList = ({allItems}) => {
     let itemNewPrice;
+    let itemNewAmount;
     let newValue;
 
 
@@ -18,15 +20,21 @@ const OrderList = ({allItems}) => {
                 switch(action) {
                     case 'increment': {
                         itemNewPrice = item.itemNewPrice + item.itemInitialPrice;
+                        itemNewAmount = item.itemNewAmount + item.itemInitialAmount;
                         itemRef.update({
-                            itemNewPrice: itemNewPrice
+                            itemNewPrice: itemNewPrice,
+                            itemNewAmount: itemNewAmount,
+                            currentTime: getCurrentItemTime()
                         });
                         break;
                     }
                     case 'decrement': {
                         itemNewPrice = item.itemNewPrice - item.itemInitialPrice;
+                        itemNewAmount = item.itemNewAmount - item.itemInitialAmount;
                         itemRef.update({
-                            itemNewPrice: itemNewPrice
+                            itemNewPrice: itemNewPrice,
+                            itemNewAmount: itemNewAmount,
+                            currentTime: getCurrentItemTime()
                         });
                         break;
                     }
@@ -69,10 +77,11 @@ const OrderList = ({allItems}) => {
                        {allItems.map((item) => {
                            return(
                                <li key={item.itemId}>
-                                   <p onClick={() => manipulateItem(item.itemId, item.itemName)}>{item.itemName}</p>
-                                   <p onClick={() => manipulateItem(item.itemId, item.itemInitialPrice)}>{item.itemInitialPrice}</p>
-                                   <p>{item.itemNewPrice}</p>
-                                   <p>{item.currentTime}</p>
+                                   <p onClick={() => manipulateItem(item.itemId, item.itemName)}>item name: {item.itemName}</p>
+                                   <p>items: {item.itemNewAmount}</p>
+                                   <p onClick={() => manipulateItem(item.itemId, item.itemInitialPrice)}>price: {item.itemInitialPrice}</p>
+                                   <p>new price: {item.itemNewPrice}</p>
+                                   <p>time: {item.currentTime}</p>
                                    <button onClick={() => manipulateItem(item.itemId, 'increment')}>+1</button>
                                    <button onClick={() => manipulateItem(item.itemId, 'decrement')}>-1</button>
                                    <button onClick={() => manipulateItem(item.itemId, 'delete')}>delete</button>

@@ -24,10 +24,12 @@ const Form = ({user}) => {
         const singleBillItem = {
             currentDate: getOrderDate(),
             currentTime: getCurrentItemTime(),
-            itemName: capitalize(input.itemName),
+            itemInitialAmount: Number(1),
             itemInitialPrice: Number(input.itemInitialPrice),
-            user: user.email,
-            itemNewPrice: Number(input.itemInitialPrice)
+            itemName: capitalize(input.itemName),
+            itemNewAmount: Number(1),
+            itemNewPrice: Number(input.itemInitialPrice),
+            user: user.email
         };
 
         itemsDatabase.push(singleBillItem);
