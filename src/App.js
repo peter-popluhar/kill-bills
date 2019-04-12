@@ -45,7 +45,7 @@ const App = ({user, getUser, getOrders, getArchive}) => {
                     <Header />
                     <Form />
                     <OrderList />
-                    {/*<ArchiveList />*/}
+                    <ArchiveList />
                 </>
                 :
                 <button onClick={loginFn}>Login</button>

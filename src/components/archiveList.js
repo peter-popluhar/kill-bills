@@ -1,28 +1,41 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {ARCHIVE} from './../utils';
 
-class ArchiveList extends Component {
+const ArchiveList = ({allItems}) => {
 
-    render() {
+    console.log(allItems)
 
-        return(
-            <ul>
-                {Object.keys(this.props.allArchivedItemsSortedByArchiveId).map((v,i) => {
-                    return (
-                        <li key={i}>
-                            {this.props.allArchivedItemsSortedByArchiveId[v].map((vv, ii) => {
-                                return(
-                                    <span key={ii}>
-                                        <h2>{vv.itemNewAmount} x {vv.itemName} = {vv.itemNewPrice}</h2>
-                                    </span>
-                                )
-                            })}
-                        </li>
-                    )
-                })}
-            </ul>
-        )
+    return(
+        <>
+            {allItems &&
+                <ul>
+                    {Object.keys(allItems).map((v, i) => {
+                        return (
+                            <li key={i}>
+                                {allItems[v].map((vv, ii) => {
+                                    return (
+                                        <span key={ii}>
+                                            <h2>{vv.itemNewAmount} x {vv.itemName} = {vv.itemNewPrice}</h2>
+                                        </span>
+                                    )
+                                })}
+                            </li>
+                        )
+                    })}
+                </ul>
+            }
+        </>
+    )
 
-    }
 }
 
-export default ArchiveList;
+const mapStateToProps = (state) => {
+    return {
+        allItems: state.archiveReducer.payload
+    }
+};
+
+export default connect(
+    mapStateToProps
+)(ArchiveList);
