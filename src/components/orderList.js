@@ -1,16 +1,17 @@
 import React from 'react';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
-import {getCurrentItemTime} from './../utils';
+import {getCurrentItemTime, ORDER_ITEMS_DB, INCREMENT, DECREMENT, DELETE, CHANGE_ITEM_NAME, CHANGE_ITEM_PRICE} from './../utils';
+
+// todo: user can enter to prompt dialog for price only number
 
 const OrderList = ({allItems}) => {
     let itemNewPrice;
     let itemNewAmount;
     let newValue;
 
-
     const manipulateItem = (itemId, action) => {
-        const itemRef = firebase.database().ref(`/orderItems/${itemId}`);
+        const itemRef = firebase.database().ref(`/${ORDER_ITEMS_DB}/${itemId}`);
 
         // eslint-disable-next-line
         allItems.map((item) => {
@@ -18,7 +19,7 @@ const OrderList = ({allItems}) => {
             if (item.itemId === itemId) {
 
                 switch(action) {
-                    case 'increment': {
+                    case INCREMENT: {
                         itemNewPrice = item.itemNewPrice + item.itemInitialPrice;
                         itemNewAmount = item.itemNewAmount + item.itemInitialAmount;
                         itemRef.update({
@@ -28,7 +29,7 @@ const OrderList = ({allItems}) => {
                         });
                         break;
                     }
-                    case 'decrement': {
+                    case DECREMENT: {
                         itemNewPrice = item.itemNewPrice - item.itemInitialPrice;
                         itemNewAmount = item.itemNewAmount - item.itemInitialAmount;
                         itemRef.update({
@@ -38,24 +39,24 @@ const OrderList = ({allItems}) => {
                         });
                         break;
                     }
-                    case 'delete': {
+                    case DELETE: {
                         itemRef.remove();
                         break;
                     }
-                    case item.itemName: {
+                    case CHANGE_ITEM_NAME: {
                         newValue = prompt('new name', '');
                         if(newValue === null) {
-                            return
+                            return null
                         }
                         itemRef.update({
                             itemName: newValue
                         });
                         break;
                     }
-                    case item.itemInitialPrice: {
+                    case CHANGE_ITEM_PRICE: {
                         newValue = prompt('new price', '');
                         if(newValue === null) {
-                            return
+                            return null
                         }
                         itemNewPrice = newValue * item.itemNewAmount;
                         itemRef.update({
@@ -79,14 +80,14 @@ const OrderList = ({allItems}) => {
                        {allItems.map((item) => {
                            return(
                                <li key={item.itemId}>
-                                   <p onClick={() => manipulateItem(item.itemId, item.itemName)}>item name: {item.itemName}</p>
+                                   <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)}>item name: {item.itemName}</p>
                                    <p>items: {item.itemNewAmount}</p>
-                                   <p onClick={() => manipulateItem(item.itemId, item.itemInitialPrice)}>price: {item.itemInitialPrice}</p>
+                                   <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)}>price: {item.itemInitialPrice}</p>
                                    <p>new price: {item.itemNewPrice}</p>
                                    <p>time: {item.currentTime}</p>
-                                   <button onClick={() => manipulateItem(item.itemId, 'increment')}>+1</button>
-                                   <button onClick={() => manipulateItem(item.itemId, 'decrement')}>-1</button>
-                                   <button onClick={() => manipulateItem(item.itemId, 'delete')}>delete</button>
+                                   <button onClick={() => manipulateItem(item.itemId, INCREMENT)}>+1</button>
+                                   <button onClick={() => manipulateItem(item.itemId, DECREMENT)}>-1</button>
+                                   <button onClick={() => manipulateItem(item.itemId, DELETE)}>delete</button>
                                </li>
                            )
                        })}

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import firebase from './firebase.js';
+import React, { useEffect } from 'react';
 import { auth } from './firebase.js';
 import Form from './components/form';
 import Header from './components/header';
@@ -8,86 +7,85 @@ import './App.css'
 import {getUserAction, getOrdersFromDbAction} from './appAction';
 import {connect} from 'react-redux';
 import {provider} from './firebase';
+import {itemsDatabase} from './utils';
 
-class App extends Component {
+const App = ({user, getUser, getData}) => {
 
-    getOrdersFromDbFn = () => {
-        firebase.database().ref('orderItems').on('value', (snapshot) => {
+    const getOrdersFromDbFn = () => {
 
-            let ordersSnapshot = snapshot.val();
-            let items = {};
-            let newState = [];
+        if(user) {
+            itemsDatabase.on('value', (snapshot) => {
 
-            for (let item in ordersSnapshot) {
+                let ordersSnapshot = snapshot.val();
+                let items = {};
+                let newState = [];
 
-                if (ordersSnapshot.hasOwnProperty(item)) {
+                for (let item in ordersSnapshot) {
 
-                    let order = ordersSnapshot[item];
-                    let userName = order["user"];
-                    if (this.props.user.email === userName) {
-                        items[item] = order;
+                    if (ordersSnapshot.hasOwnProperty(item)) {
 
-                        newState.unshift({
-                            itemId: item,
-                            itemName: items[item].itemName,
-                            itemInitialAmount: items[item].itemInitialAmount,
-                            itemNewAmount: items[item].itemNewAmount,
-                            itemInitialPrice: items[item].itemInitialPrice,
-                            itemNewPrice: items[item].itemNewPrice,
-                            currentDate: items[item].currentDate,
-                            currentTime: items[item].currentTime,
-                            user: items[item].user
-                        });
+                        let order = ordersSnapshot[item];
+                        let userName = order["user"];
+                        if (user.email === userName) {
+                            items[item] = order;
+
+                            newState.unshift({
+                                itemId: item,
+                                itemName: items[item].itemName,
+                                itemInitialAmount: items[item].itemInitialAmount,
+                                itemNewAmount: items[item].itemNewAmount,
+                                itemInitialPrice: items[item].itemInitialPrice,
+                                itemNewPrice: items[item].itemNewPrice,
+                                currentDate: items[item].currentDate,
+                                currentTime: items[item].currentTime,
+                                user: items[item].user
+                            });
+                        }
                     }
                 }
-            }
 
-            this.props.getData(newState);
-        });
+                getData(newState);
+            });
+        }
+
     };
 
     // if user is logged, send him to redux store
-    getUserFn = () => {
+    const getUserFn = () => {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                this.props.getUser(user);
+                getUser(user);
             }
         });
     };
 
-    loginFn = () => {
+    const loginFn = () => {
         auth.signInWithPopup(provider)
             .then((result) => {
                 const user = result.user;
-                this.props.getUser(user);
-                this.getOrdersFromDbFn();
+                getUser(user);
+                getOrdersFromDbFn();
             });
     };
 
-    componentDidMount() {
-        this.getUserFn();
-        this.getOrdersFromDbFn();
-    };
+    useEffect(() => {
+        getUserFn();
+        getOrdersFromDbFn();
+    });
 
-    render() {
-
-        const {user} = this.props;
-
-        return (
-            <>
-                
-                { user ?
-                    <>
-                        <Header />
-                        <Form />
-                        <OrderList />
-                    </>
-                    :
-                    <button onClick={this.loginFn}>Login</button>
-                }
-            </>
-        );
-    }
+    return (
+        <>
+            { user ?
+                <>
+                    <Header />
+                    <Form />
+                    <OrderList />
+                </>
+                :
+                <button onClick={loginFn}>Login</button>
+            }
+        </>
+    );
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -99,7 +97,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => (
     {
-        user: state.userReducer.user
+        user: state.userReducer.user,
+        payload: state.dataReducer.payload
     }
 );
 

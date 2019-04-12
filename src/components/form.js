@@ -1,5 +1,4 @@
-import React, { useState, useReducer } from 'react';
-import firebase from './../firebase.js';
+import React, { useReducer } from 'react';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
 import {itemsDatabase,archiveDatabase,getOrderDate,getCurrentItemTime} from './../utils';

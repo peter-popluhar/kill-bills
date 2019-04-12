@@ -14,7 +14,7 @@ const Header = ({user, getUser, logout}) => {
 
     return(
         <div className="header">
-            <><p>{user.email}</p> <button onClick={logoutFn}>Logout</button></>
+            <p>{user.email}</p> <button onClick={logoutFn}>Logout</button>
         </div>
     )
 };
