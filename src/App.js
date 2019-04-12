@@ -7,48 +7,9 @@ import './App.css'
 import {getUserAction, getOrdersFromDbAction} from './appAction';
 import {connect} from 'react-redux';
 import {provider} from './firebase';
-import {itemsDatabase} from './utils';
+import {getOrdersFromDbFn} from './utils';
 
 const App = ({user, getUser, getData}) => {
-
-    const getOrdersFromDbFn = () => {
-
-        if(user) {
-            itemsDatabase.on('value', (snapshot) => {
-
-                let ordersSnapshot = snapshot.val();
-                let items = {};
-                let newState = [];
-
-                for (let item in ordersSnapshot) {
-
-                    if (ordersSnapshot.hasOwnProperty(item)) {
-
-                        let order = ordersSnapshot[item];
-                        let userName = order["user"];
-                        if (user.email === userName) {
-                            items[item] = order;
-
-                            newState.unshift({
-                                itemId: item,
-                                itemName: items[item].itemName,
-                                itemInitialAmount: items[item].itemInitialAmount,
-                                itemNewAmount: items[item].itemNewAmount,
-                                itemInitialPrice: items[item].itemInitialPrice,
-                                itemNewPrice: items[item].itemNewPrice,
-                                currentDate: items[item].currentDate,
-                                currentTime: items[item].currentTime,
-                                user: items[item].user
-                            });
-                        }
-                    }
-                }
-
-                getData(newState);
-            });
-        }
-
-    };
 
     // if user is logged, send him to redux store
     const getUserFn = () => {
@@ -70,7 +31,7 @@ const App = ({user, getUser, getData}) => {
 
     useEffect(() => {
         getUserFn();
-        getOrdersFromDbFn();
+        getOrdersFromDbFn(user, getData);
     });
 
     return (

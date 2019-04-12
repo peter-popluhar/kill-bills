@@ -1,15 +1,10 @@
 import firebase from './firebase.js';
 
-export const ORDER_ITEMS_DB = 'orderItems';
-export const ARCHIVE_DB = 'archive';
-export const INCREMENT = 'increment';
-export const DECREMENT = 'decrement';
-export const DELETE = 'delete';
-export const CHANGE_ITEM_NAME = 'changeItemName';
-export const CHANGE_ITEM_PRICE = 'changeItemPrice';
+export const ORDER_ITEMS = 'orderItems';
+export const ARCHIVE = 'archive';
 
-export const itemsDatabase = firebase.database().ref(ORDER_ITEMS_DB);
-export const archiveDatabase = firebase.database().ref(ARCHIVE_DB);
+export const orderItemsDatabase = firebase.database().ref(ORDER_ITEMS);
+export const archiveItemsDatabase = firebase.database().ref(ARCHIVE);
 
 export function getOrderDate() {
     let currentBillDate = new Date();
@@ -27,4 +22,78 @@ export function getCurrentItemTime() {
     let currentItemSeconds = currentItemDate.getSeconds();
 
     return `${currentItemHour}:${currentItemMinute}:${currentItemSeconds}`;
+};
+
+export function getOrdersFromDbFn(user, getData) {
+
+    if(user) {
+        orderItemsDatabase.on('value', (snapshot) => {
+
+            let ordersSnapshot = snapshot.val();
+            let items = {};
+            let newState = [];
+
+            for (let item in ordersSnapshot) {
+
+                if (ordersSnapshot.hasOwnProperty(item)) {
+
+                    let order = ordersSnapshot[item];
+                    let userName = order["user"];
+                    if (user.email === userName) {
+                        items[item] = order;
+
+                        newState.unshift({
+                            itemId: item,
+                            itemName: items[item].itemName,
+                            itemInitialAmount: items[item].itemInitialAmount,
+                            itemNewAmount: items[item].itemNewAmount,
+                            itemInitialPrice: items[item].itemInitialPrice,
+                            itemNewPrice: items[item].itemNewPrice,
+                            currentDate: items[item].currentDate,
+                            currentTime: items[item].currentTime,
+                            user: items[item].user
+                        });
+                    }
+                }
+            }
+
+            getData(newState);
+        });
+    }
+
+};
+
+export function getAllArchivedItemsFromDB(user) {
+    archiveItemsDatabase.on('value', (snapshot) => {
+
+        let ordersSnapshot = snapshot.val();
+        let items = {};
+        let newState = [];
+
+        for (let item in ordersSnapshot) {
+
+            if (ordersSnapshot.hasOwnProperty(item)) {
+
+                let order = ordersSnapshot[item];
+                let userName = order["user"];
+
+                if (user.email === userName) {
+                    items[item] = order;
+
+                    newState.push({
+                        itemId: item,
+                        itemName: items[item].itemName,
+                        itemInitialAmount: items[item].itemInitialAmount,
+                        itemNewAmount: items[item].itemNewAmount,
+                        itemInitialPrice: items[item].itemInitialPrice,
+                        itemNewPrice: items[item].itemNewPrice,
+                        currentDate: items[item].currentDate,
+                        currentTime: items[item].currentTime,
+                        archiveId: items[item].archiveId,
+                        user: items[item].user
+                    });
+                }
+            }
+        }
+    });
 };

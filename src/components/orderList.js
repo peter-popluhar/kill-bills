@@ -1,7 +1,14 @@
 import React from 'react';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
-import {getCurrentItemTime, ORDER_ITEMS_DB, INCREMENT, DECREMENT, DELETE, CHANGE_ITEM_NAME, CHANGE_ITEM_PRICE} from './../utils';
+import {getCurrentItemTime, ORDER_ITEMS} from './../utils';
+
+
+const INCREMENT = 'increment';
+const DECREMENT = 'decrement';
+const DELETE = 'delete';
+const CHANGE_ITEM_NAME = 'changeItemName';
+const CHANGE_ITEM_PRICE = 'changeItemPrice';
 
 // todo: user can enter to prompt dialog for price only number
 
@@ -11,7 +18,7 @@ const OrderList = ({allItems}) => {
     let newValue;
 
     const manipulateItem = (itemId, action) => {
-        const itemRef = firebase.database().ref(`/${ORDER_ITEMS_DB}/${itemId}`);
+        const itemRef = firebase.database().ref(`/${ORDER_ITEMS}/${itemId}`);
 
         // eslint-disable-next-line
         allItems.map((item) => {

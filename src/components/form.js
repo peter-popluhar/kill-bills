@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
-import {itemsDatabase,archiveDatabase,getOrderDate,getCurrentItemTime} from './../utils';
+import {orderItemsDatabase,archiveItemsDatabase,getOrderDate,getCurrentItemTime} from './../utils';
 
 const Form = ({user}) => {
 
@@ -31,7 +31,7 @@ const Form = ({user}) => {
             user: user.email
         };
 
-        itemsDatabase.push(singleBillItem);
+        orderItemsDatabase.push(singleBillItem);
 
         setInputValue({
             itemName: '',
@@ -41,14 +41,14 @@ const Form = ({user}) => {
 
     const clearCurrentBill = () => {
 
-        itemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+        orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
                 updates[child.key] = null;
             });
 
-            itemsDatabase.update(updates);
+            orderItemsDatabase.update(updates);
         });
     };
 
@@ -57,15 +57,15 @@ const Form = ({user}) => {
 
         let keys = [];
 
-        itemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+        orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             snapshot.forEach(function(child) {
                 keys.push([child.key]);
             });
         }).then(() => {
 
-            itemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot)  {
+            orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot)  {
 
-                archiveDatabase.update( snapshot.val(), function(error) {
+                archiveItemsDatabase.update( snapshot.val(), function(error) {
 
                     if( !error ) {
                         let updates = {};
@@ -74,7 +74,7 @@ const Form = ({user}) => {
                             updates[child.key] = null;
                         });
 
-                        itemsDatabase.update(updates);
+                        orderItemsDatabase.update(updates);
                     }
                     else if( typeof(console) !== 'undefined' && console.error ) {
                         console.error(error);
@@ -88,14 +88,14 @@ const Form = ({user}) => {
 
     const clearArchive = () => {
 
-        archiveDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+        archiveItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
                 updates[child.key] = null;
             });
 
-            archiveDatabase.update(updates);
+            archiveItemsDatabase.update(updates);
         });
     };
 
