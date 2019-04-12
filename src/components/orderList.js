@@ -107,7 +107,7 @@ const OrderList = ({allItems}) => {
 
 const mapStateToProps = (state) => {
     return {
-        allItems: state.dataReducer
+        allItems: state.ordersReducer
     }
 };
 

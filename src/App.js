@@ -4,12 +4,14 @@ import Form from './components/form';
 import Header from './components/header';
 import OrderList from './components/orderList';
 import './App.css'
-import {getUserAction, getOrdersFromDbAction} from './appAction';
+import {getUserAction, getOrdersFromDbAction, getArchiveFromDbAction} from './appAction';
 import {connect} from 'react-redux';
 import {provider} from './firebase';
 import {getOrdersFromDbFn} from './utils';
+import {getArchivedOrdersFromDbFn} from './utils';
+import ArchiveList from './components/archiveList';
 
-const App = ({user, getUser, getData}) => {
+const App = ({user, getUser, getOrders, getArchive}) => {
 
     // if user is logged, send him to redux store
     const getUserFn = () => {
@@ -25,13 +27,15 @@ const App = ({user, getUser, getData}) => {
             .then((result) => {
                 const user = result.user;
                 getUser(user);
-                getOrdersFromDbFn();
+                getOrdersFromDbFn(user, getOrders);
+                getArchivedOrdersFromDbFn(user, getArchive)
             });
     };
 
     useEffect(() => {
         getUserFn();
-        getOrdersFromDbFn(user, getData);
+        getOrdersFromDbFn(user, getOrders);
+        getArchivedOrdersFromDbFn(user, getArchive);
     });
 
     return (
@@ -41,6 +45,7 @@ const App = ({user, getUser, getData}) => {
                     <Header />
                     <Form />
                     <OrderList />
+                    {/*<ArchiveList />*/}
                 </>
                 :
                 <button onClick={loginFn}>Login</button>
@@ -52,14 +57,16 @@ const App = ({user, getUser, getData}) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: (user) => dispatch(getUserAction(user)),
-        getData: (allOrders) => dispatch(getOrdersFromDbAction(allOrders))
+        getOrders: (orders) => dispatch(getOrdersFromDbAction(orders)),
+        getArchive: (archive) => dispatch(getArchiveFromDbAction(archive))
     }
 };
 
 const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
-        payload: state.dataReducer.payload
+        orders: state.ordersReducer.orders,
+        archive: state.ordersReducer.archive
     }
 );
 
