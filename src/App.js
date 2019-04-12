@@ -7,6 +7,7 @@ import OrderList from './components/orderList';
 import './App.css'
 import {getUserAction, getOrdersFromDbAction} from './appAction';
 import {connect} from 'react-redux';
+import {provider} from './firebase';
 
 class App extends Component {
 
@@ -54,6 +55,15 @@ class App extends Component {
         });
     };
 
+    loginFn = () => {
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                const user = result.user;
+                this.props.getUser(user);
+                this.getOrdersFromDbFn();
+            });
+    };
+
     componentDidMount() {
         this.getUserFn();
         this.getOrdersFromDbFn();
@@ -65,13 +75,15 @@ class App extends Component {
 
         return (
             <>
-                <Header />
-
-                { user &&
+                
+                { user ?
                     <>
+                        <Header />
                         <Form />
                         <OrderList />
                     </>
+                    :
+                    <button onClick={this.loginFn}>Login</button>
                 }
             </>
         );
