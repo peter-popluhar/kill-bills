@@ -51,7 +51,8 @@ export function getOrdersFromDbFn(user, getData) {
                             itemNewPrice: items[item].itemNewPrice,
                             currentDate: items[item].currentDate,
                             currentTime: items[item].currentTime,
-                            user: items[item].user
+                            user: items[item].user,
+                            archiveId: items[item].archiveId
                         });
                     }
                 }
@@ -85,14 +86,14 @@ export function getArchivedOrdersFromDbFn(user, getData) {
                         newState.push({
                             itemId: item,
                             itemName: items[item].itemName,
-                            itemInitialAmount: items[item].itemInitialAmount,
                             itemNewAmount: items[item].itemNewAmount,
-                            itemInitialPrice: items[item].itemInitialPrice,
                             itemNewPrice: items[item].itemNewPrice,
-                            currentDate: items[item].currentDate,
-                            currentTime: items[item].currentTime,
+                            itemInitialPrice: items[item].itemInitialPrice,
+                            user: items[item].user,
                             archiveId: items[item].archiveId,
-                            user: items[item].user
+                            currentDate: items[item].currentDate,
+                            itemInitialAmount: items[item].itemInitialAmount,
+                            currentTime: items[item].currentTime
                         });
                     }
                 }

@@ -1,5 +1,5 @@
-import React, { useReducer } from 'react';
-import { capitalize } from 'lodash';
+import React, { useReducer, useState } from 'react';
+import { capitalize, size } from 'lodash';
 import {connect} from 'react-redux';
 import {orderItemsDatabase,archiveItemsDatabase,getOrderDate,getCurrentItemTime} from './../utils';
 
@@ -12,6 +12,14 @@ const Form = ({user}) => {
             itemInitialPrice: ''
         }
     );
+
+    const [archive, setArchive] = useState({
+        archiveId: null,
+        archiveItemsLength: 0,
+        archivedItemsSortedByArchiveId: []
+    });
+
+    const { archiveId, archiveItemsLength } = archive;
 
     const handleChange = e => {
         setInputValue({[e.target.name]: e.target.value});
@@ -30,6 +38,13 @@ const Form = ({user}) => {
             itemNewPrice: Number(input.itemInitialPrice),
             user: user.email
         };
+
+        if( !archiveId ) {
+            singleBillItem.archiveId = archiveItemsLength + 1;
+            setArchive({archiveId: singleBillItem.archiveId});
+        } else {
+            singleBillItem.archiveId = archiveId
+        }
 
         orderItemsDatabase.push(singleBillItem);
 

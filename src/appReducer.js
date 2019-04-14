@@ -25,7 +25,7 @@ export const ordersReducer = (state = [], action) => {
 	}
 }
 
-export const archiveReducer = (state = {}, action) => {
+export const archiveReducer = (state = [], action) => {
 	switch (action.type) {
 		case GET_DATA_ARCHIVE_FROM_DB: {
 			return action.payload

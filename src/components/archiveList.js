@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import {ARCHIVE} from './../utils';
+import { groupBy } from 'lodash';
 
 const ArchiveList = ({allItems}) => {
 
-    console.log(allItems)
+    let sortedByArchiveId = groupBy(allItems, 'archiveId');
 
     return(
         <>
-            {allItems &&
+            {sortedByArchiveId &&
                 <ul>
-                    {Object.keys(allItems).map((v, i) => {
+                    {Object.keys(sortedByArchiveId).map((v, i) => {
                         return (
                             <li key={i}>
-                                {allItems[v].map((vv, ii) => {
+                                {sortedByArchiveId[v].map((vv, ii) => {
                                     return (
                                         <span key={ii}>
                                             <h2>{vv.itemNewAmount} x {vv.itemName} = {vv.itemNewPrice}</h2>
@@ -32,7 +33,7 @@ const ArchiveList = ({allItems}) => {
 
 const mapStateToProps = (state) => {
     return {
-        allItems: state.archiveReducer.payload
+        allItems: state.archiveReducer
     }
 };
 
