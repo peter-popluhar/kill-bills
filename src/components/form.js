@@ -1,7 +1,8 @@
 import React, { useReducer, useState } from 'react';
 import { capitalize, size } from 'lodash';
 import {connect} from 'react-redux';
-import {orderItemsDatabase,archiveItemsDatabase,getOrderDate,getCurrentItemTime} from './../utils';
+import { orderItemsDatabase,archiveItemsDatabase } from './../utils/fireBaseUtils';
+import { getOrderDate,getCurrentItemTime } from './../utils/appUtils';
 
 const Form = ({user}) => {
 

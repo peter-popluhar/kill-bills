@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
 import {connect} from 'react-redux';
-import {ARCHIVE} from './../utils';
+import {ARCHIVE} from './../utils/fireBaseUtils';
 import { groupBy } from 'lodash';
 
 const ArchiveList = ({allItems}) => {

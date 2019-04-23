@@ -1,7 +1,8 @@
 import React from 'react';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
-import {getCurrentItemTime, ORDER_ITEMS} from './../utils';
+import { ORDER_ITEMS } from './../utils/fireBaseUtils';
+import { getCurrentItemTime} from './../utils/appUtils';
 
 
 const INCREMENT = 'increment';

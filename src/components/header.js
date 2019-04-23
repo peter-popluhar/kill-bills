@@ -1,7 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {auth} from '../firebase';
-import { logoutAction} from '../appAction';
+import { logoutAction } from '../appAction';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
 const Header = ({user, getUser, logout}) => {
 
@@ -13,9 +15,11 @@ const Header = ({user, getUser, logout}) => {
     };
 
     return(
-        <div className="header">
-            <p>{user.email}</p> <button onClick={logoutFn}>Logout</button>
-        </div>
+        <AppBar>
+            <Toolbar>
+                <p>{user.email}</p> <button onClick={logoutFn}>Logout</button>
+            </Toolbar>
+        </AppBar>
     )
 };
 

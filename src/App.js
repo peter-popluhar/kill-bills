@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
-import { auth } from './firebase.js';
+import { auth, provider } from './firebase.js';
 import Form from './components/form';
 import Header from './components/header';
 import OrderList from './components/orderList';
 import './App.css'
-import {getUserAction, getOrdersFromDbAction, getArchiveFromDbAction} from './appAction';
-import {connect} from 'react-redux';
-import {provider} from './firebase';
-import {getOrdersFromDbFn} from './utils';
-import {getArchivedOrdersFromDbFn} from './utils';
+import { getUserAction, getOrdersFromDbAction, getArchiveFromDbAction } from './appAction';
+import { connect } from 'react-redux';
+import { getOrdersFromDbFn, getArchivedOrdersFromDbFn } from './utils/fireBaseUtils';
 import ArchiveList from './components/archiveList';
+import HeaderNotLogged from './components/headerNotLogged';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
-const App = ({user, getUser, getOrders, getArchive}) => {
+const App = ({ user, getUser, getOrders, getArchive }) => {
 
     // if user is logged, send him to redux store
     const getUserFn = () => {
@@ -48,7 +49,8 @@ const App = ({user, getUser, getOrders, getArchive}) => {
                     <ArchiveList />
                 </>
                 :
-                <button onClick={loginFn}>Login</button>
+                <HeaderNotLogged />
+
             }
         </>
     );

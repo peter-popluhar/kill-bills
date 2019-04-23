@@ -1,28 +1,9 @@
-import firebase from './firebase.js';
+import firebase from './../firebase.js';
 
 export const ORDER_ITEMS = 'orderItems';
 export const ARCHIVE = 'archive';
-
 export const orderItemsDatabase = firebase.database().ref(ORDER_ITEMS);
 export const archiveItemsDatabase = firebase.database().ref(ARCHIVE);
-
-export function getOrderDate() {
-    let currentBillDate = new Date();
-    let currentBillDay = currentBillDate.getDate();
-    let currentBillMonth = currentBillDate.getMonth() + 1;
-    let currentBillYear = currentBillDate.getFullYear();
-
-    return `${currentBillDay}/${currentBillMonth}/${currentBillYear}`;
-};
-
-export function getCurrentItemTime() {
-    let currentItemDate = new Date();
-    let currentItemHour = currentItemDate.getHours();
-    let currentItemMinute = currentItemDate.getMinutes();
-    let currentItemSeconds = currentItemDate.getSeconds();
-
-    return `${currentItemHour}:${currentItemMinute}:${currentItemSeconds}`;
-};
 
 export function getOrdersFromDbFn(user, getData) {
 
@@ -86,14 +67,14 @@ export function getArchivedOrdersFromDbFn(user, getData) {
                         newState.push({
                             itemId: item,
                             itemName: items[item].itemName,
-                            itemNewAmount: items[item].itemNewAmount,
-                            itemNewPrice: items[item].itemNewPrice,
-                            itemInitialPrice: items[item].itemInitialPrice,
-                            user: items[item].user,
-                            archiveId: items[item].archiveId,
-                            currentDate: items[item].currentDate,
                             itemInitialAmount: items[item].itemInitialAmount,
-                            currentTime: items[item].currentTime
+                            itemNewAmount: items[item].itemNewAmount,
+                            itemInitialPrice: items[item].itemInitialPrice,
+                            itemNewPrice: items[item].itemNewPrice,
+                            currentDate: items[item].currentDate,
+                            currentTime: items[item].currentTime,
+                            user: items[item].user,
+                            archiveId: items[item].archiveId
                         });
                     }
                 }
