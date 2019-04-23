@@ -5,10 +5,10 @@ export const ARCHIVE = 'archive';
 export const orderItemsDatabase = firebase.database().ref(ORDER_ITEMS);
 export const archiveItemsDatabase = firebase.database().ref(ARCHIVE);
 
-export function getOrdersFromDbFn(user, getData) {
+export function getDataFromDbFn(user, getData, database) {
 
     if(user) {
-        orderItemsDatabase.on('value', (snapshot) => {
+        database.on('value', (snapshot) => {
 
             let ordersSnapshot = snapshot.val();
             let items = {};
@@ -23,18 +23,34 @@ export function getOrdersFromDbFn(user, getData) {
                     if (user.email === userName) {
                         items[item] = order;
 
-                        newState.unshift({
-                            itemId: item,
-                            itemName: items[item].itemName,
-                            itemInitialAmount: items[item].itemInitialAmount,
-                            itemNewAmount: items[item].itemNewAmount,
-                            itemInitialPrice: items[item].itemInitialPrice,
-                            itemNewPrice: items[item].itemNewPrice,
-                            currentDate: items[item].currentDate,
-                            currentTime: items[item].currentTime,
-                            user: items[item].user,
-                            archiveId: items[item].archiveId
-                        });
+                        if(database === orderItemsDatabase) {
+                            newState.unshift({
+                                itemId: item,
+                                itemName: items[item].itemName,
+                                itemInitialAmount: items[item].itemInitialAmount,
+                                itemNewAmount: items[item].itemNewAmount,
+                                itemInitialPrice: items[item].itemInitialPrice,
+                                itemNewPrice: items[item].itemNewPrice,
+                                currentDate: items[item].currentDate,
+                                currentTime: items[item].currentTime,
+                                user: items[item].user,
+                                archiveId: items[item].archiveId
+                            });
+                        } else {
+                            newState.push({
+                                itemId: item,
+                                itemName: items[item].itemName,
+                                itemInitialAmount: items[item].itemInitialAmount,
+                                itemNewAmount: items[item].itemNewAmount,
+                                itemInitialPrice: items[item].itemInitialPrice,
+                                itemNewPrice: items[item].itemNewPrice,
+                                currentDate: items[item].currentDate,
+                                currentTime: items[item].currentTime,
+                                user: items[item].user,
+                                archiveId: items[item].archiveId
+                            });
+                        }
+
                     }
                 }
             }
@@ -42,45 +58,4 @@ export function getOrdersFromDbFn(user, getData) {
             getData(newState);
         });
     }
-
-};
-
-export function getArchivedOrdersFromDbFn(user, getData) {
-
-    if(user) {
-        archiveItemsDatabase.on('value', (snapshot) => {
-
-            let ordersSnapshot = snapshot.val();
-            let items = {};
-            let newState = [];
-
-            for (let item in ordersSnapshot) {
-
-                if (ordersSnapshot.hasOwnProperty(item)) {
-
-                    let order = ordersSnapshot[item];
-                    let userName = order["user"];
-
-                    if (user.email === userName) {
-                        items[item] = order;
-
-                        newState.push({
-                            itemId: item,
-                            itemName: items[item].itemName,
-                            itemInitialAmount: items[item].itemInitialAmount,
-                            itemNewAmount: items[item].itemNewAmount,
-                            itemInitialPrice: items[item].itemInitialPrice,
-                            itemNewPrice: items[item].itemNewPrice,
-                            currentDate: items[item].currentDate,
-                            currentTime: items[item].currentTime,
-                            user: items[item].user,
-                            archiveId: items[item].archiveId
-                        });
-                    }
-                }
-            }
-
-            getData(newState);
-        });
-    }
-};
+}

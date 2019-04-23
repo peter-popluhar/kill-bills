@@ -6,7 +6,7 @@ import OrderList from './components/orderList';
 import './App.css'
 import { getUserAction, getOrdersFromDbAction, getArchiveFromDbAction } from './appAction';
 import { connect } from 'react-redux';
-import { getOrdersFromDbFn, getArchivedOrdersFromDbFn } from './utils/fireBaseUtils';
+import { getDataFromDbFn, archiveItemsDatabase, orderItemsDatabase } from './utils/fireBaseUtils';
 import ArchiveList from './components/archiveList';
 import HeaderNotLogged from './components/headerNotLogged';
 import AppBar from '@material-ui/core/AppBar';
@@ -28,15 +28,15 @@ const App = ({ user, getUser, getOrders, getArchive }) => {
             .then((result) => {
                 const user = result.user;
                 getUser(user);
-                getOrdersFromDbFn(user, getOrders);
-                getArchivedOrdersFromDbFn(user, getArchive)
+                getDataFromDbFn(user, getOrders, orderItemsDatabase);
+                getDataFromDbFn(user, getArchive, archiveItemsDatabase)
             });
     };
 
     useEffect(() => {
         getUserFn();
-        getOrdersFromDbFn(user, getOrders);
-        getArchivedOrdersFromDbFn(user, getArchive);
+        getDataFromDbFn(user, getOrders, orderItemsDatabase);
+        getDataFromDbFn(user, getArchive, archiveItemsDatabase);
     });
 
     return (
