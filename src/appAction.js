@@ -8,24 +8,24 @@ export const getUserAction = (payload) => {
 		type: GET_USER,
 		payload
 	}
-}
+};
 
 export const logoutAction = () => {
 	return {
 		type: LOG_OUT
 	}
-}
+};
 
 export const getOrdersFromDbAction = (payload) => {
 	return {
 		type: GET_DATA_ORDERS_FROM_DB,
 		payload
 	}
-}
+};
 
 export const getArchiveFromDbAction = (payload) => {
 	return {
 		type: GET_DATA_ARCHIVE_FROM_DB,
 		payload
 	}
-}
+};

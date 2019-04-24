@@ -23,16 +23,6 @@ const App = ({ user, getUser, getOrders, getArchive }) => {
         });
     };
 
-    const loginFn = () => {
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                const user = result.user;
-                getUser(user);
-                getDataFromDbFn(user, getOrders, orderItemsDatabase);
-                getDataFromDbFn(user, getArchive, archiveItemsDatabase)
-            });
-    };
-
     useEffect(() => {
         getUserFn();
         getDataFromDbFn(user, getOrders, orderItemsDatabase);
