@@ -13,7 +13,7 @@ const styles = {
     alignItems: 'center'
 };
 
-const HeaderNotLogged = ({ user, getUser }) => {
+const HeaderNotLogged = ({ getUser }) => {
 
     const loginFn = () => {
         auth.signInWithPopup(provider)
@@ -25,7 +25,7 @@ const HeaderNotLogged = ({ user, getUser }) => {
 
     return (
         <div>
-            <AppBar>
+            <AppBar position={'static'}>
                 <Toolbar style={styles}>
                     <Typography component="h1" variant="h5" color="inherit">KillBill&#x24;</Typography>
                     <Button color="inherit" onClick={loginFn}>Login</Button>

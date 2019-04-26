@@ -4,8 +4,15 @@ import {auth} from '../firebase';
 import { logoutAction } from '../appAction';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
-const Header = ({user, getUser, logout}) => {
+const styles = {
+    justifyContent: 'space-between',
+    alignItems: 'center'
+};
+
+const Header = ({user, logout}) => {
 
     const logoutFn = () => {
         auth.signOut()
@@ -15,9 +22,11 @@ const Header = ({user, getUser, logout}) => {
     };
 
     return(
-        <AppBar>
-            <Toolbar>
-                <p>{user.email}</p> <button onClick={logoutFn}>Logout</button>
+        <AppBar position={'static'}>
+            <Toolbar style={styles}>
+                <Typography component="h1" variant="h5" color="inherit">KillBill&#x24;</Typography>
+                <p>{user.email}</p>
+                <Button color="inherit" onClick={logoutFn}>Logout</Button>
             </Toolbar>
         </AppBar>
     )
