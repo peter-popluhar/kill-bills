@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from 'react';
-import { capitalize, size } from 'lodash';
+import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
 import { orderItemsDatabase,archiveItemsDatabase } from './../utils/fireBaseUtils';
 import { getOrderDate,getCurrentItemTime } from './../utils/appUtils';
@@ -116,7 +116,7 @@ const Form = ({user}) => {
     };
 
     return (
-        <div className="form">form:
+        <>
             <form onSubmit={handleSubmit}>
                 <input type="text" name="itemName" onChange={handleChange} value={input.itemName} />
                 <input type="number" name="itemInitialPrice" onChange={handleChange} value={input.itemInitialPrice} />
@@ -125,7 +125,7 @@ const Form = ({user}) => {
             <button onClick={clearCurrentBill}>delete</button>
             <button onClick={archiveCurrentBill}>archive</button>
             <button onClick={clearArchive}>clear archive</button>
-        </div>
+        </>
     )
 
 }

@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
-import { auth, provider } from './firebase.js';
-import Form from './components/form';
+import { auth } from './firebase.js';
 import Header from './components/header';
-import OrderList from './components/orderList';
-import './App.css'
 import { getUserAction, getOrdersFromDbAction, getArchiveFromDbAction } from './appAction';
 import { connect } from 'react-redux';
 import { getDataFromDbFn, archiveItemsDatabase, orderItemsDatabase } from './utils/fireBaseUtils';
-import ArchiveList from './components/archiveList';
 import HeaderNotLogged from './components/headerNotLogged';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
+import TabsNav from './components/tabsNav';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: blue
+    }
+});
 
 const App = ({ user, getUser, getOrders, getArchive }) => {
 
@@ -30,19 +33,17 @@ const App = ({ user, getUser, getOrders, getArchive }) => {
     });
 
     return (
-        <>
+        <MuiThemeProvider theme={theme}>
             { user ?
                 <>
                     <Header />
-                    <Form />
-                    <OrderList />
-                    <ArchiveList />
+                    <TabsNav />
                 </>
                 :
                 <HeaderNotLogged />
 
             }
-        </>
+        </MuiThemeProvider>
     );
 }
 

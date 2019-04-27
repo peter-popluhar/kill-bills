@@ -82,7 +82,7 @@ const OrderList = ({allItems}) => {
    return (
        <>
            {allItems &&
-               <div className="list">
+               <>
                    <span>list: </span>
                    <ul>
                        {allItems.map((item) => {
@@ -100,7 +100,7 @@ const OrderList = ({allItems}) => {
                            )
                        })}
                    </ul>
-               </div>
+               </>
            }
        </>
    )
