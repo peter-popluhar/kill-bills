@@ -6,6 +6,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 
 const styles = {
     justifyContent: 'space-between',
@@ -21,11 +23,16 @@ const Header = ({user, logout}) => {
             });
     };
 
+    const userFirstName = user.displayName.substr(0, user.displayName.indexOf(' ')) || 'User';
+
     return(
         <AppBar position={'static'}>
             <Toolbar style={styles}>
                 <Typography component="h1" variant="h5" color="inherit">KillBill&#x24;</Typography>
-                <p>{user.email}</p>
+                <Chip
+                    avatar={<Avatar alt={user.displayName} src={user.photoURL} />}
+                    label={userFirstName}
+                />
                 <Button color="inherit" onClick={logoutFn}>Logout</Button>
             </Toolbar>
         </AppBar>
