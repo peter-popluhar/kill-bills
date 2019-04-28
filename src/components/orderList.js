@@ -3,7 +3,11 @@ import firebase from './../firebase.js';
 import {connect} from 'react-redux';
 import { ORDER_ITEMS } from './../utils/fireBaseUtils';
 import { getCurrentItemTime} from './../utils/appUtils';
-
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -83,19 +87,37 @@ const OrderList = ({allItems}) => {
        <>
            {allItems &&
                <>
-                   <span>list: </span>
                    <ul>
                        {allItems.map((item) => {
                            return(
                                <li key={item.itemId}>
-                                   <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)}>item name: {item.itemName}</p>
-                                   <p>items: {item.itemNewAmount}</p>
-                                   <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)}>price: {item.itemInitialPrice}</p>
-                                   <p>new price: {item.itemNewPrice}</p>
-                                   <p>time: {item.currentTime}</p>
-                                   <button onClick={() => manipulateItem(item.itemId, INCREMENT)}>+1</button>
-                                   <button onClick={() => manipulateItem(item.itemId, DECREMENT)}>-1</button>
-                                   <button onClick={() => manipulateItem(item.itemId, DELETE)}>delete</button>
+
+                                   <ExpansionPanel>
+                                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                           <div>
+                                               <p>
+                                                item name: {item.itemName}<br/>
+                                                items: {item.itemNewAmount}<br/>
+                                                price: {item.itemInitialPrice}<br/>
+                                                new price: {item.itemNewPrice}<br/>
+                                                time: {item.currentTime}
+                                               </p>
+                                           </div>
+                                       </ExpansionPanelSummary>
+                                       <ExpansionPanelDetails>
+                                           <div>
+                                               <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)}>Edit item name: {item.itemName}</p>
+                                               <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)}>Edit item price: {item.itemInitialPrice}</p>
+                                               <button onClick={() => manipulateItem(item.itemId, INCREMENT)}>+1</button>
+                                               <button onClick={() => manipulateItem(item.itemId, DECREMENT)}>-1</button>
+                                               <button onClick={() => manipulateItem(item.itemId, DELETE)}>delete</button>
+                                           </div>
+
+                                       </ExpansionPanelDetails>
+                                   </ExpansionPanel>
+
+
+
                                </li>
                            )
                        })}
