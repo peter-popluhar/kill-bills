@@ -1,8 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { groupBy } from 'lodash';
+import { archiveItemsDatabase } from './../utils/fireBaseUtils';
+import Fab from '@material-ui/core/Fab';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
-const ArchiveList = ({allItems}) => {
+const ArchiveList = ({allItems, user}) => {
+
+    const clearArchive = () => {
+
+        archiveItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+            let updates = {};
+
+            snapshot.forEach(function(child) {
+                updates[child.key] = null;
+            });
+
+            archiveItemsDatabase.update(updates);
+        });
+    };
 
     let sortedByArchiveId = groupBy(allItems, 'archiveId');
 
@@ -25,6 +41,10 @@ const ArchiveList = ({allItems}) => {
                     })}
                 </ul>
             }
+        <Fab size='small' color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
+            <DeleteForever />
+        </Fab>
+
         </>
     )
 
@@ -32,7 +52,8 @@ const ArchiveList = ({allItems}) => {
 
 const mapStateToProps = (state) => {
     return {
-        allItems: state.archiveReducer
+        allItems: state.archiveReducer,
+        user: state.userReducer.user
     }
 };
 

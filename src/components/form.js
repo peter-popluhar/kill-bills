@@ -1,8 +1,14 @@
 import React, { useReducer, useState } from 'react';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
-import { orderItemsDatabase,archiveItemsDatabase } from './../utils/fireBaseUtils';
+import { orderItemsDatabase } from './../utils/fireBaseUtils';
 import { getOrderDate,getCurrentItemTime } from './../utils/appUtils';
+import TextField from '@material-ui/core/TextField';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import {FormSkeleton, FormSkeletonItem} from './formStyles';
+import OrderOverview from './orderOverview';
+import Paper from '@material-ui/core/Paper';
 
 const Form = ({user}) => {
 
@@ -55,79 +61,45 @@ const Form = ({user}) => {
         })
     };
 
-    const clearCurrentBill = () => {
-
-        orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
-            let updates = {};
-
-            snapshot.forEach(function(child) {
-                updates[child.key] = null;
-            });
-
-            orderItemsDatabase.update(updates);
-        });
-    };
-
-    const archiveCurrentBill = (e) => {
-        e.preventDefault();
-
-        let keys = [];
-
-        orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
-            snapshot.forEach(function(child) {
-                keys.push([child.key]);
-            });
-        }).then(() => {
-
-            orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot)  {
-
-                archiveItemsDatabase.update( snapshot.val(), function(error) {
-
-                    if( !error ) {
-                        let updates = {};
-
-                        snapshot.forEach(function(child) {
-                            updates[child.key] = null;
-                        });
-
-                        orderItemsDatabase.update(updates);
-                    }
-                    else if( typeof(console) !== 'undefined' && console.error ) {
-                        console.error(error);
-                    }
-                });
-            }).then(() => {
-
-            });
-        });
-    };
-
-    const clearArchive = () => {
-
-        archiveItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
-            let updates = {};
-
-            snapshot.forEach(function(child) {
-                updates[child.key] = null;
-            });
-
-            archiveItemsDatabase.update(updates);
-        });
-    };
-
     return (
-        <>
+        <Paper square style={{padding: '3%', margin: '2%'}}>
             <form onSubmit={handleSubmit}>
-                <input type="text" name="itemName" onChange={handleChange} value={input.itemName} />
-                <input type="number" name="itemInitialPrice" onChange={handleChange} value={input.itemInitialPrice} />
-                <input type="submit"/>
-            </form>
-            <button onClick={clearCurrentBill}>delete</button>
-            <button onClick={archiveCurrentBill}>archive</button>
-            <button onClick={clearArchive}>clear archive</button>
-        </>
-    )
+                <FormSkeleton>
+                    <FormSkeletonItem>
+                        <TextField
+                            name='itemName'
+                            label='Item Name'
+                            value={input.itemName}
+                            onChange={handleChange}
+                            variant='standard'
+                            type='text'
+                        />
+                    </FormSkeletonItem>
 
+
+                    <FormSkeletonItem>
+                        <TextField
+                            name='itemInitialPrice'
+                            label='Item Price'
+                            value={input.itemInitialPrice}
+                            onChange={handleChange}
+                            variant='standard'
+                            type='number'
+                        />
+                        <Fab size='small' color='primary' aria-label='Add' type='submit'>
+                            <AddIcon />
+                        </Fab>
+                    </FormSkeletonItem>
+
+
+                </FormSkeleton>
+
+            </form>
+
+            <OrderOverview />
+
+        </Paper>
+    )
 }
 
 const mapStateToProps = (state) => (
