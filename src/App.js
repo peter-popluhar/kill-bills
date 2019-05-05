@@ -9,6 +9,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 import TabsNav from './components/tabsNav';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import {GlobalStyle} from './components/globalStyles'
 
 const theme = createMuiTheme({
     palette: {
@@ -35,7 +36,9 @@ const App = ({ user, getUser, getOrders, getArchive }) => {
 
     return (
         <MuiThemeProvider theme={theme}>
+            <GlobalStyle />
             <CssBaseline />
+
             { user ?
                 <>
                     <Header />

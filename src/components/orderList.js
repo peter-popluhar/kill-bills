@@ -8,6 +8,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from '@material-ui/core/Paper';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -86,43 +87,38 @@ const OrderList = ({allItems}) => {
    return (
        <>
            {allItems &&
+
                <>
-                   <ul>
-                       {allItems.map((item) => {
-                           return(
-                               <li key={item.itemId}>
-
-                                   <ExpansionPanel>
-                                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                           <div>
-                                               <p>
-                                                item name: {item.itemName}<br/>
-                                                items: {item.itemNewAmount}<br/>
-                                                price: {item.itemInitialPrice}<br/>
-                                                new price: {item.itemNewPrice}<br/>
-                                                time: {item.currentTime}
-                                               </p>
-                                           </div>
-                                       </ExpansionPanelSummary>
-                                       <ExpansionPanelDetails>
-                                           <div>
-                                               <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)}>Edit item name: {item.itemName}</p>
-                                               <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)}>Edit item price: {item.itemInitialPrice}</p>
-                                               <button onClick={() => manipulateItem(item.itemId, INCREMENT)}>+1</button>
-                                               <button onClick={() => manipulateItem(item.itemId, DECREMENT)}>-1</button>
-                                               <button onClick={() => manipulateItem(item.itemId, DELETE)}>delete</button>
-                                           </div>
-
-                                       </ExpansionPanelDetails>
-                                   </ExpansionPanel>
-
-
-
-                               </li>
-                           )
-                       })}
-                   </ul>
+                   {allItems.map((item) => {
+                       return(
+                           <Paper key={item.itemId} square style={{margin: '2%'}}>
+                               <ExpansionPanel>
+                                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} style={{padding: '2%'}}>
+                                       <div>
+                                           <p>
+                                            item name: {item.itemName}<br/>
+                                            items: {item.itemNewAmount}<br/>
+                                            price: {item.itemInitialPrice}<br/>
+                                            new price: {item.itemNewPrice}<br/>
+                                            time: {item.currentTime}
+                                           </p>
+                                       </div>
+                                   </ExpansionPanelSummary>
+                                   <ExpansionPanelDetails>
+                                       <div>
+                                           <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)}>Edit item name: {item.itemName}</p>
+                                           <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)}>Edit item price: {item.itemInitialPrice}</p>
+                                           <button onClick={() => manipulateItem(item.itemId, INCREMENT)}>+1</button>
+                                           <button onClick={() => manipulateItem(item.itemId, DECREMENT)}>-1</button>
+                                           <button onClick={() => manipulateItem(item.itemId, DELETE)}>delete</button>
+                                       </div>
+                                   </ExpansionPanelDetails>
+                               </ExpansionPanel>
+                           </Paper>
+                       )
+                   })}
                </>
+
            }
        </>
    )
