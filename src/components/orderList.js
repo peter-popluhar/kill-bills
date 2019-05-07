@@ -9,6 +9,10 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
+import Fab from '@material-ui/core/Fab';
+import DeleteForever from '@material-ui/icons/DeleteForever';
+import Button from '@material-ui/core/Button';
+import Edit from '@material-ui/icons/Edit';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -93,25 +97,40 @@ const OrderList = ({allItems}) => {
                        return(
                            <Paper key={item.itemId} square style={{margin: '2%'}}>
                                <ExpansionPanel>
-                                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} style={{padding: '2%'}}>
+                                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} style={{padding: '3% 24px'}}>
                                        <div>
-                                           <p>
-                                            item name: {item.itemName}<br/>
-                                            items: {item.itemNewAmount}<br/>
-                                            price: {item.itemInitialPrice}<br/>
-                                            new price: {item.itemNewPrice}<br/>
-                                            time: {item.currentTime}
-                                           </p>
+                                           <Typography component="p" variant="subtitle2">
+                                            {item.currentTime}
+                                           </Typography>
+                                           <Typography component="p" variant="h5">
+                                               {item.itemNewAmount} {item.itemName} x {item.itemInitialPrice} = {item.itemNewPrice}
+                                           </Typography>
                                        </div>
                                    </ExpansionPanelSummary>
                                    <ExpansionPanelDetails>
-                                       <div>
-                                           <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)}>Edit item name: {item.itemName}</p>
-                                           <p onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)}>Edit item price: {item.itemInitialPrice}</p>
-                                           <button onClick={() => manipulateItem(item.itemId, INCREMENT)}>+1</button>
-                                           <button onClick={() => manipulateItem(item.itemId, DECREMENT)}>-1</button>
-                                           <button onClick={() => manipulateItem(item.itemId, DELETE)}>delete</button>
+
+                                       <div className="skeleton">
+                                           <div className="skeleton__item">
+                                               <Button  onClick={() => manipulateItem(item.itemId, INCREMENT)} variant="outlined">
+                                                   + 1
+                                               </Button>
+                                               <Button onClick={() => manipulateItem(item.itemId, DECREMENT)} variant="outlined">
+                                                   - 1
+                                               </Button>
+                                               <Button onClick={() => manipulateItem(item.itemId, DELETE)} variant="outlined">
+                                                   <DeleteForever fontSize="small" />
+                                               </Button>
+                                           </div>
+                                           <div className="skeleton__item">
+                                               <Button onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)} variant="outlined">
+                                                   Name
+                                               </Button>
+                                               <Button onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)} variant="outlined">
+                                                   Price
+                                               </Button>
+                                           </div>
                                        </div>
+
                                    </ExpansionPanelDetails>
                                </ExpansionPanel>
                            </Paper>

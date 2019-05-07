@@ -62,7 +62,7 @@ const Form = ({user}) => {
     };
 
     return (
-        <Paper square style={{padding: '3%', margin: '2%'}}>
+        <Paper square style={{padding: '24px', margin: '2%'}}>
             <form onSubmit={handleSubmit}>
                 <FormSkeleton>
                     <FormSkeletonItem>
@@ -86,7 +86,7 @@ const Form = ({user}) => {
                             variant='standard'
                             type='number'
                         />
-                        <Fab size='small' color='primary' aria-label='Add' type='submit'>
+                        <Fab size='medium' color='primary' aria-label='Add' type='submit'>
                             <AddIcon />
                         </Fab>
                     </FormSkeletonItem>

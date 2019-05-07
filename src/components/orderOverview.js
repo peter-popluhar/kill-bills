@@ -71,13 +71,15 @@ const OrderOverview = ({user, allItems}) => {
 
                 <>
                     <OrderOverviewSkeletonItem>
-                        <p>total: {totalBillPrice()}</p>
+                        <Typography component="p" variant="h5" color="inherit">
+                            total: {totalBillPrice()}
+                        </Typography>
                     </OrderOverviewSkeletonItem>
                     <OrderOverviewSkeletonItem>
-                        <Fab size='small' color='secondary' aria-label='delete current orders' onClick={clearCurrentBill}>
+                        <Fab size='medium' color='secondary' aria-label='delete current orders' onClick={clearCurrentBill}>
                             <DeleteForever />
                         </Fab>
-                        <Fab size='small' color='primary' aria-label='Add' onClick={archiveCurrentBill}>
+                        <Fab size='medium' color='primary' aria-label='Add' onClick={archiveCurrentBill}>
                             <Archive />
                         </Fab>
                     </OrderOverviewSkeletonItem>
