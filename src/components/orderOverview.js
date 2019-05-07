@@ -56,13 +56,22 @@ const OrderOverview = ({user, allItems}) => {
         });
     };
 
+    const totalBillPrice = () => {
+        let allItemsNewPrices = [];
+        allItems.map((v) => {
+            allItemsNewPrices.push(v.itemNewPrice);
+            return allItemsNewPrices
+        });
+        return allItemsNewPrices.reduce((a, b) => a + b, 0)
+    }
+
     return (
         <OrderOverviewSkeleton>
             { allItems.length > 0 ?
 
                 <>
                     <OrderOverviewSkeletonItem>
-                        <p>total: </p>
+                        <p>total: {totalBillPrice()}</p>
                     </OrderOverviewSkeletonItem>
                     <OrderOverviewSkeletonItem>
                         <Fab size='small' color='secondary' aria-label='delete current orders' onClick={clearCurrentBill}>
