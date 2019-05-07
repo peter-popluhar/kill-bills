@@ -6,7 +6,7 @@ import { getOrderDate,getCurrentItemTime } from './../utils/appUtils';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import {FormSkeleton, FormSkeletonItem} from './formStyles';
+import {FormSkeleton, FormSkeletonItem} from './styled/formStyles';
 import OrderOverview from './orderOverview';
 import Paper from '@material-ui/core/Paper';
 
@@ -90,8 +90,6 @@ const Form = ({user}) => {
                             <AddIcon />
                         </Fab>
                     </FormSkeletonItem>
-
-
                 </FormSkeleton>
 
             </form>

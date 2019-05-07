@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import cssVar from './../utils/globalVariables';
+import cssVar from './../../utils/globalVariables';
 
 export const OrderOverviewSkeleton = styled.div`
     display: flex;

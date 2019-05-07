@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Archive from '@material-ui/icons/Archive';
 import Typography from '@material-ui/core/Typography';
-import { OrderOverviewSkeleton, OrderOverviewSkeletonItem } from './orderOverviewStyles'
+import { OrderOverviewSkeleton, OrderOverviewSkeletonItem } from './styled/orderOverviewStyles'
 
 const OrderOverview = ({user, allItems}) => {
 

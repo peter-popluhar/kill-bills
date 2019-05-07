@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import cssVar from './../utils/globalVariables';
+import cssVar from './../../utils/globalVariables';
 
 export const FormSkeleton = styled.div`
     display: flex;

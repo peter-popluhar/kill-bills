@@ -10,9 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
-import DeleteForever from '@material-ui/icons/DeleteForever';
-import Button from '@material-ui/core/Button';
-import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
+import {OrderListButtons} from './styled/orderListButtons';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -103,34 +106,18 @@ const OrderList = ({allItems}) => {
                                             {item.currentTime}
                                            </Typography>
                                            <Typography component="p" variant="h5">
-                                               {item.itemNewAmount} {item.itemName} x {item.itemInitialPrice} = {item.itemNewPrice}
+                                               {item.itemName} {item.itemNewAmount} x {item.itemInitialPrice} = {item.itemNewPrice}
                                            </Typography>
                                        </div>
                                    </ExpansionPanelSummary>
                                    <ExpansionPanelDetails>
-
-                                       <div className="skeleton">
-                                           <div className="skeleton__item">
-                                               <Button  onClick={() => manipulateItem(item.itemId, INCREMENT)} variant="outlined">
-                                                   + 1
-                                               </Button>
-                                               <Button onClick={() => manipulateItem(item.itemId, DECREMENT)} variant="outlined">
-                                                   - 1
-                                               </Button>
-                                               <Button onClick={() => manipulateItem(item.itemId, DELETE)} variant="outlined">
-                                                   <DeleteForever fontSize="small" />
-                                               </Button>
-                                           </div>
-                                           <div className="skeleton__item">
-                                               <Button onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)} variant="outlined">
-                                                   Name
-                                               </Button>
-                                               <Button onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)} variant="outlined">
-                                                   Price
-                                               </Button>
-                                           </div>
-                                       </div>
-
+                                       <OrderListButtons>
+                                           <Fab children={<AddIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, INCREMENT)} color="primary" aria-label="Add one item" size='small'/>
+                                           <Fab children={<RemoveIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, DECREMENT)} color="secondary" aria-label="Remove one item" size='small' />
+                                           <Fab children={<Delete fontSize="small" />} onClick={() => manipulateItem(item.itemId, DELETE)} color="secondary" aria-label="Delete item" size='small' />
+                                           <Fab children={<TextFieldsIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)} aria-label="Edit item name" size='small' />
+                                           <Fab children={<AttachMoneyIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)} aria-label="Edit item price" size='small' />
+                                       </OrderListButtons>
                                    </ExpansionPanelDetails>
                                </ExpansionPanel>
                            </Paper>
