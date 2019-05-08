@@ -5,13 +5,13 @@ export function getOrderDate() {
     let currentBillYear = currentBillDate.getFullYear();
 
     return `${currentBillDay}/${currentBillMonth}/${currentBillYear}`;
-};
+}
 
-export function getCurrentItemTime() {
+export function getCurrentItemTime(){
     let currentItemDate = new Date();
     let currentItemHour = currentItemDate.getHours();
     let currentItemMinute = currentItemDate.getMinutes();
     let currentItemSeconds = currentItemDate.getSeconds();
 
     return `${currentItemHour}:${currentItemMinute}:${currentItemSeconds}`;
-};
+}

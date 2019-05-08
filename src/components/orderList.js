@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
 import { ORDER_ITEMS } from './../utils/fireBaseUtils';
-import { getCurrentItemTime} from './../utils/appUtils';
+import { getCurrentItemTime } from './../utils/appUtils';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -16,6 +16,8 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -29,6 +31,7 @@ const OrderList = ({allItems}) => {
     let itemCalculatedPrice;
     let itemCalculatedAmount;
     let newValue;
+    const MySwal = withReactContent(Swal);
 
     const manipulateItem = (itemId, action) => {
         const itemRef = firebase.database().ref(`/${ORDER_ITEMS}/${itemId}`);
@@ -64,24 +67,34 @@ const OrderList = ({allItems}) => {
                         break;
                     }
                     case CHANGE_ITEM_NAME: {
-                        newValue = prompt('new name', '');
-                        if(newValue === null) {
-                            return null
-                        }
-                        itemRef.update({
-                            itemName: newValue
+                        MySwal.fire({
+                            title: <Typography component="p" variant="h5">Enter new item name:</Typography>,
+                            input: 'text'
+                        }).then((result) => {
+                            newValue = result.value;
+
+                            if(newValue) {
+                                itemRef.update({
+                                    itemName: newValue
+                                });
+                            }
                         });
                         break;
                     }
                     case CHANGE_ITEM_PRICE: {
-                        newValue = prompt('new price', '');
-                        if(newValue === null) {
-                            return null
-                        }
-                        itemCalculatedPrice = newValue * item.itemCalculatedAmount;
-                        itemRef.update({
-                            itemInitialPrice: Number(newValue),
-                            itemCalculatedPrice: itemCalculatedPrice
+                        MySwal.fire({
+                            title: <Typography component="p" variant="h5">Enter new item price. Must be a number!</Typography>,
+                            input: 'number'
+                        }).then((result) => {
+                            newValue = result.value;
+
+                            if(newValue) {
+                                itemCalculatedPrice = newValue * item.itemCalculatedAmount;
+                                itemRef.update({
+                                    itemInitialPrice: Number(newValue),
+                                    itemCalculatedPrice: itemCalculatedPrice
+                                });
+                            }
                         });
                         break;
                     }
