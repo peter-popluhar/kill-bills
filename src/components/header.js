@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {auth} from '../firebase';
 import { logoutAction } from '../appAction';
@@ -55,3 +56,8 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Header);
+
+Header.propTypes = {
+    user: PropTypes.object,
+    logout: PropTypes.func
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import firebase from './../firebase.js';
 import {connect} from 'react-redux';
 import { ORDER_ITEMS } from './../utils/fireBaseUtils';
@@ -155,3 +156,7 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps
 )(OrderList);
+
+OrderList.propTypes = {
+    allItems: PropTypes.array
+};

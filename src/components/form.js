@@ -1,4 +1,5 @@
 import React, { useReducer, useState } from 'react';
+import PropTypes from 'prop-types';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
 import { orderItemsDatabase } from './../utils/fireBaseUtils';
@@ -109,3 +110,7 @@ const mapStateToProps = (state) => (
 export default connect(
     mapStateToProps
 )(Form);
+
+Form.propTypes = {
+    user: PropTypes.object
+};

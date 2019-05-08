@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { auth, provider } from './../firebase.js';
 import {getUserAction} from './../appAction';
 import {connect} from 'react-redux';
@@ -44,3 +45,8 @@ export default connect(
     null,
     mapDispatchToProps
 )(HeaderNotLogged);
+
+
+HeaderNotLogged.propTypes = {
+    getUser: PropTypes.func
+};

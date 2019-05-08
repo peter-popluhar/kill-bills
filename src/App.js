@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { auth } from './firebase.js';
 import Header from './components/header';
 import { getUserAction, getOrdersFromDbAction, getArchiveFromDbAction } from './appAction';
@@ -75,3 +76,10 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(App);
+
+App.propTypes = {
+    user: PropTypes.object,
+    getUser: PropTypes.func,
+    getOrders: PropTypes.func,
+    getArchive: PropTypes.func
+};

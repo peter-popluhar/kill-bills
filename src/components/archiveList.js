@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { groupBy } from 'lodash';
 import { archiveItemsDatabase } from './../utils/fireBaseUtils';
@@ -60,3 +61,8 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps
 )(ArchiveList);
+
+ArchiveList.propTypes = {
+    allItems: PropTypes.array,
+    user: PropTypes.object
+};

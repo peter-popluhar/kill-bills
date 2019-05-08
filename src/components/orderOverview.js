@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { orderItemsDatabase,archiveItemsDatabase } from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
@@ -142,3 +143,8 @@ const mapStateToProps = (state) => (
 export default connect(
     mapStateToProps
 )(OrderOverview);
+
+OrderOverview.propTypes = {
+    allItems: PropTypes.array,
+    user: PropTypes.object
+};
