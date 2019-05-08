@@ -56,14 +56,47 @@ const OrderOverview = ({user, allItems}) => {
         });
     };
 
-    const totalBillPrice = () => {
-        let allItemsNewPrices = [];
-        allItems.map((v) => {
-            allItemsNewPrices.push(v.itemNewPrice);
-            return allItemsNewPrices
+
+    const orderInfo = () => {
+
+        let allItemsCalculatedPrices = [];
+        let allOrdersCurrentTime = [];
+        let allItemsCalculatedAmount = [];
+        let lastOrderName = '';
+
+        allItems.map((item) => {
+            allItemsCalculatedPrices.push(item.itemCalculatedPrice);
+            allOrdersCurrentTime.push(item.currentTime);
+            allItemsCalculatedAmount.push(item.itemCalculatedAmount);
         });
-        return allItemsNewPrices.reduce((a, b) => a + b, 0)
-    }
+
+        let allOrdersCurrentTimeSortedByTime = allOrdersCurrentTime.sort((a, b) => {
+            return new Date('1970/01/01 ' + a) - new Date('1970/01/01 ' + b);
+        });
+
+        let lastOrderCurrentTime = allOrdersCurrentTimeSortedByTime[allOrdersCurrentTimeSortedByTime.length - 1];
+
+
+        allItems.map((item) => {
+
+            if(lastOrderCurrentTime === item.currentTime) {
+                lastOrderName = item.itemName;
+            }
+            return lastOrderName
+        });
+
+        return {
+            allItemsCalculatedPrices: allItemsCalculatedPrices.reduce((a, b) => a + b, 0),
+            lastOrderCurrentTime: lastOrderCurrentTime,
+            allItemsCalculatedAmount: allItemsCalculatedAmount.reduce((a, b) => a + b, 0),
+            lastOrderName: lastOrderName
+        }
+    };
+
+    const allItemsCalculatedPrices = orderInfo().allItemsCalculatedPrices;
+    const lastOrderCurrentTime = orderInfo().lastOrderCurrentTime;
+    const allItemsCalculatedAmount = orderInfo().allItemsCalculatedAmount;
+    const lastOrderName = orderInfo().lastOrderName;
 
     return (
         <OrderOverviewSkeleton>
@@ -72,15 +105,21 @@ const OrderOverview = ({user, allItems}) => {
                 <>
                     <OrderOverviewSkeletonItem>
                         <Typography component="p" variant="h5" color="inherit">
-                            total: {totalBillPrice()}
+                            Total: {allItemsCalculatedPrices}
+                        </Typography>
+                        <Typography component="p" variant="subtitle1" color="inherit">
+                            Items: {allItemsCalculatedAmount}
+                        </Typography>
+                        <Typography component="p" variant="subtitle1" color="inherit">
+                            Last order: {lastOrderName} at {lastOrderCurrentTime}
                         </Typography>
                     </OrderOverviewSkeletonItem>
                     <OrderOverviewSkeletonItem>
-                        <Fab size='medium' color='secondary' aria-label='delete current orders' onClick={clearCurrentBill}>
-                            <DeleteForever />
-                        </Fab>
                         <Fab size='medium' color='primary' aria-label='Add' onClick={archiveCurrentBill}>
                             <Archive />
+                        </Fab>
+                        <Fab size='medium' color='secondary' aria-label='delete current orders' onClick={clearCurrentBill}>
+                            <DeleteForever />
                         </Fab>
                     </OrderOverviewSkeletonItem>
                 </>

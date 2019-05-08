@@ -41,8 +41,8 @@ const Form = ({user}) => {
             itemInitialAmount: Number(1),
             itemInitialPrice: Number(input.itemInitialPrice),
             itemName: capitalize(input.itemName),
-            itemNewAmount: Number(1),
-            itemNewPrice: Number(input.itemInitialPrice),
+            itemCalculatedAmount: Number(1),
+            itemCalculatedPrice: Number(input.itemInitialPrice),
             user: user.email
         };
 

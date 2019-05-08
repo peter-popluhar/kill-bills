@@ -26,8 +26,8 @@ const CHANGE_ITEM_PRICE = 'changeItemPrice';
 // todo: user can enter to prompt dialog for price only number
 
 const OrderList = ({allItems}) => {
-    let itemNewPrice;
-    let itemNewAmount;
+    let itemCalculatedPrice;
+    let itemCalculatedAmount;
     let newValue;
 
     const manipulateItem = (itemId, action) => {
@@ -40,21 +40,21 @@ const OrderList = ({allItems}) => {
 
                 switch(action) {
                     case INCREMENT: {
-                        itemNewPrice = item.itemNewPrice + item.itemInitialPrice;
-                        itemNewAmount = item.itemNewAmount + item.itemInitialAmount;
+                        itemCalculatedPrice = item.itemCalculatedPrice + item.itemInitialPrice;
+                        itemCalculatedAmount = item.itemCalculatedAmount + item.itemInitialAmount;
                         itemRef.update({
-                            itemNewPrice: itemNewPrice,
-                            itemNewAmount: itemNewAmount,
+                            itemCalculatedPrice: itemCalculatedPrice,
+                            itemCalculatedAmount: itemCalculatedAmount,
                             currentTime: getCurrentItemTime()
                         });
                         break;
                     }
                     case DECREMENT: {
-                        itemNewPrice = item.itemNewPrice - item.itemInitialPrice;
-                        itemNewAmount = item.itemNewAmount - item.itemInitialAmount;
+                        itemCalculatedPrice = item.itemCalculatedPrice - item.itemInitialPrice;
+                        itemCalculatedAmount = item.itemCalculatedAmount - item.itemInitialAmount;
                         itemRef.update({
-                            itemNewPrice: itemNewPrice,
-                            itemNewAmount: itemNewAmount,
+                            itemCalculatedPrice: itemCalculatedPrice,
+                            itemCalculatedAmount: itemCalculatedAmount,
                             currentTime: getCurrentItemTime()
                         });
                         break;
@@ -78,10 +78,10 @@ const OrderList = ({allItems}) => {
                         if(newValue === null) {
                             return null
                         }
-                        itemNewPrice = newValue * item.itemNewAmount;
+                        itemCalculatedPrice = newValue * item.itemCalculatedAmount;
                         itemRef.update({
                             itemInitialPrice: Number(newValue),
-                            itemNewPrice: itemNewPrice
+                            itemCalculatedPrice: itemCalculatedPrice
                         });
                         break;
                     }
@@ -102,18 +102,21 @@ const OrderList = ({allItems}) => {
                                <ExpansionPanel>
                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} style={{padding: '3% 24px'}}>
                                        <div>
-                                           <Typography component="p" variant="subtitle2">
-                                            {item.currentTime}
-                                           </Typography>
                                            <Typography component="p" variant="h5">
-                                               {item.itemName} {item.itemNewAmount} x {item.itemInitialPrice} = {item.itemNewPrice}
+                                               {item.itemName}
+                                           </Typography>
+                                           <Typography component="p" variant="subtitle1">
+                                               {item.itemCalculatedAmount} x {item.itemInitialPrice} = {item.itemCalculatedPrice}
+                                           </Typography>
+                                           <Typography component="p" variant="subtitle2">
+                                               {item.currentTime}
                                            </Typography>
                                        </div>
                                    </ExpansionPanelSummary>
                                    <ExpansionPanelDetails>
                                        <OrderListButtons>
                                            <Fab children={<AddIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, INCREMENT)} color="primary" aria-label="Add one item" size='small'/>
-                                           <Fab children={<RemoveIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, DECREMENT)} color="secondary" aria-label="Remove one item" size='small' />
+                                           <Fab disabled={item.itemCalculatedAmount < 2} children={<RemoveIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, DECREMENT)} color="secondary" aria-label="Remove one item" size='small' />
                                            <Fab children={<Delete fontSize="small" />} onClick={() => manipulateItem(item.itemId, DELETE)} color="secondary" aria-label="Delete item" size='small' />
                                            <Fab children={<TextFieldsIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_NAME)} aria-label="Edit item name" size='small' />
                                            <Fab children={<AttachMoneyIcon fontSize="small" />} onClick={() => manipulateItem(item.itemId, CHANGE_ITEM_PRICE)} aria-label="Edit item price" size='small' />

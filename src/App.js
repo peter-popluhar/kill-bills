@@ -14,7 +14,10 @@ import {GlobalStyle} from './components/styled/globalStyles'
 const theme = createMuiTheme({
     palette: {
         primary: blue
-    }
+    },
+    typography: {
+        useNextVariants: true
+    },
 });
 
 const App = ({ user, getUser, getOrders, getArchive }) => {
