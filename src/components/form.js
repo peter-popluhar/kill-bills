@@ -1,7 +1,8 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
+import { archiveItemsGroupByIdAction } from './../appAction';
 import { orderItemsDatabase } from './../utils/fireBaseUtils';
 import { getOrderDate,getCurrentItemTime } from './../utils/appUtils';
 import TextField from '@material-ui/core/TextField';
@@ -10,8 +11,9 @@ import AddIcon from '@material-ui/icons/Add';
 import {FormSkeleton, FormSkeletonItem} from './styled/formStyles';
 import OrderOverview from './orderOverview';
 import Paper from '@material-ui/core/Paper';
+import { groupBy } from 'lodash';
 
-const Form = ({user, archive}) => {
+const Form = ({user, archive, getArchiveGroupById, archiveGrouped}) => {
 
     const [input, setInputValue] = useReducer(
         (state, newState) => ({...state, ...newState}),
@@ -37,7 +39,7 @@ const Form = ({user, archive}) => {
             itemCalculatedAmount: Number(1),
             itemCalculatedPrice: Number(input.itemInitialPrice),
             user: user.email,
-            archiveId: archive.length + 1
+            archiveId: Object.keys(archiveGrouped).length + 1
         };
 
         orderItemsDatabase.push(singleBillItem);
@@ -47,6 +49,14 @@ const Form = ({user, archive}) => {
             itemInitialPrice: ''
         })
     };
+
+    const getArchiveLengthFn = () => {
+        getArchiveGroupById(groupBy(archive, 'archiveId'));
+    };
+
+    useEffect(() => {
+        getArchiveLengthFn();
+    },[archive]);
 
     return (
         <Paper square style={{padding: '24px', margin: '2%'}}>
@@ -60,6 +70,7 @@ const Form = ({user, archive}) => {
                             onChange={handleChange}
                             variant='standard'
                             type='text'
+                            required
                         />
                     </FormSkeletonItem>
 
@@ -72,6 +83,7 @@ const Form = ({user, archive}) => {
                             onChange={handleChange}
                             variant='standard'
                             type='number'
+                            required
                         />
                         <Fab size='medium' color='primary' aria-label='Add' type='submit'>
                             <AddIcon />
@@ -87,18 +99,27 @@ const Form = ({user, archive}) => {
     )
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getArchiveGroupById: (archiveLength) => dispatch(archiveItemsGroupByIdAction(archiveLength))
+    }
+};
+
 const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
-        archive: state.archiveReducer
+        archive: state.archiveReducer,
+        archiveGrouped: state.archiveGroupByIdReducer
     }
 );
 
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Form);
 
 Form.propTypes = {
     user: PropTypes.object,
-    archive: PropTypes.array
+    archive: PropTypes.array,
+    getArchiveGroupById: PropTypes.func
 };

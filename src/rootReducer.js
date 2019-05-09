@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import { userReducer, ordersReducer, archiveReducer } from './appReducer';
+import { userReducer, ordersReducer, archiveReducer, archiveGroupByIdReducer } from './appReducer';
 
 export default combineReducers({
 	userReducer,
 	ordersReducer,
-	archiveReducer
+	archiveReducer,
+	archiveGroupByIdReducer
 })

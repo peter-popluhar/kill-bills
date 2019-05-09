@@ -1,4 +1,4 @@
-import { GET_USER, LOG_OUT, GET_DATA_ORDERS_FROM_DB, GET_DATA_ARCHIVE_FROM_DB } from './appAction';
+import { GET_USER, LOG_OUT, GET_DATA_ORDERS_FROM_DB, GET_DATA_ARCHIVE_FROM_DB, ARCHIVE_ITEMS_GROUP_BY_ID } from './appAction';
 
 export const userReducer = (state = {user: null}, action) => {
 	switch (action.type) {
@@ -33,3 +33,12 @@ export const archiveReducer = (state = [], action) => {
 		default: return state
 	}
 };
+
+export const archiveGroupByIdReducer = (state = {}, action) => {
+	switch (action.type) {
+		case ARCHIVE_ITEMS_GROUP_BY_ID: {
+			return action.payload
+		}
+		default: return state
+	}
+}

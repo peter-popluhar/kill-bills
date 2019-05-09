@@ -2,6 +2,7 @@ export const GET_USER = 'GET_USER';
 export const LOG_OUT = 'LOG_OUT';
 export const GET_DATA_ORDERS_FROM_DB = 'GET_DATA_ORDERS_FROM_DB';
 export const GET_DATA_ARCHIVE_FROM_DB = 'GET_DATA_ARCHIVE_FROM_DB';
+export const ARCHIVE_ITEMS_GROUP_BY_ID = 'ARCHIVE_ITEMS_GROUP_BY_ID';
 
 export const getUserAction = (payload) => {
 	return {
@@ -26,6 +27,13 @@ export const getOrdersFromDbAction = (payload) => {
 export const getArchiveFromDbAction = (payload) => {
 	return {
 		type: GET_DATA_ARCHIVE_FROM_DB,
+		payload
+	}
+};
+
+export const archiveItemsGroupByIdAction = (payload) => {
+	return {
+		type: ARCHIVE_ITEMS_GROUP_BY_ID,
 		payload
 	}
 };
