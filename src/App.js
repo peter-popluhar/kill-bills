@@ -36,7 +36,7 @@ const App = ({ user, getUser, getOrders, getArchive }) => {
         getUserFn();
         getDataFromDbFn(user, getOrders, orderItemsDatabase);
         getDataFromDbFn(user, getArchive, archiveItemsDatabase);
-    });
+    },[user]);
 
     return (
         <MuiThemeProvider theme={theme}>
@@ -67,8 +67,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
-        orders: state.ordersReducer.orders,
-        archive: state.ordersReducer.archive
+        orders: state.ordersReducer,
+        archive: state.archiveReducer
     }
 );
 
