@@ -65,7 +65,7 @@ const OrderOverview = ({user, allItems}) => {
         let allItemsCalculatedAmount = [];
         let lastOrderName = '';
 
-        allItems.map((item) => {
+        allItems.forEach((item) => {
             allItemsCalculatedPrices.push(item.itemCalculatedPrice);
             allOrdersCurrentTime.push(item.currentTime);
             allItemsCalculatedAmount.push(item.itemCalculatedAmount);

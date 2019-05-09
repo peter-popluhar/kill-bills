@@ -26,8 +26,6 @@ const DELETE = 'delete';
 const CHANGE_ITEM_NAME = 'changeItemName';
 const CHANGE_ITEM_PRICE = 'changeItemPrice';
 
-// todo: user can enter to prompt dialog for price only number
-
 const OrderList = ({allItems}) => {
     let itemCalculatedPrice;
     let itemCalculatedAmount;
@@ -37,8 +35,7 @@ const OrderList = ({allItems}) => {
     const manipulateItem = (itemId, action) => {
         const itemRef = firebase.database().ref(`/${ORDER_ITEMS}/${itemId}`);
 
-        // eslint-disable-next-line
-        allItems.map((item) => {
+        allItems.forEach((item) => {
 
             if (item.itemId === itemId) {
 

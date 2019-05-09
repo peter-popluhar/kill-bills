@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { groupBy } from 'lodash';
-import { archiveItemsDatabase } from './../utils/fireBaseUtils';
+import {archiveItemsDatabase, ORDER_ITEMS} from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import firebase from '../firebase';
 
-const ArchiveList = ({allItems, user}) => {
+const ArchiveList = ({archiveItems, allItems, user}) => {
 
     const clearArchive = () => {
 
@@ -19,9 +20,19 @@ const ArchiveList = ({allItems, user}) => {
 
             archiveItemsDatabase.update(updates);
         });
+
+        clearOrdersArchiveId()
     };
 
-    let sortedByArchiveId = groupBy(allItems, 'archiveId');
+    const clearOrdersArchiveId = () => {
+
+        allItems.forEach((item) => {
+            let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
+           ref.update({archiveId: 1})
+        })
+    }
+
+    let sortedByArchiveId = groupBy(archiveItems, 'archiveId');
 
     return(
         <>
@@ -53,7 +64,8 @@ const ArchiveList = ({allItems, user}) => {
 
 const mapStateToProps = (state) => {
     return {
-        allItems: state.archiveReducer,
+        allItems: state.ordersReducer,
+        archiveItems: state.archiveReducer,
         user: state.userReducer.user
     }
 };
@@ -63,6 +75,6 @@ export default connect(
 )(ArchiveList);
 
 ArchiveList.propTypes = {
-    allItems: PropTypes.array,
+    archiveItems: PropTypes.array,
     user: PropTypes.object
 };

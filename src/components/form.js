@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
@@ -11,7 +11,7 @@ import {FormSkeleton, FormSkeletonItem} from './styled/formStyles';
 import OrderOverview from './orderOverview';
 import Paper from '@material-ui/core/Paper';
 
-const Form = ({user}) => {
+const Form = ({user, archive}) => {
 
     const [input, setInputValue] = useReducer(
         (state, newState) => ({...state, ...newState}),
@@ -20,14 +20,6 @@ const Form = ({user}) => {
             itemInitialPrice: ''
         }
     );
-
-    const [archive, setArchive] = useState({
-        archiveId: null,
-        archiveItemsLength: 0,
-        archivedItemsSortedByArchiveId: []
-    });
-
-    const { archiveId, archiveItemsLength } = archive;
 
     const handleChange = e => {
         setInputValue({[e.target.name]: e.target.value});
@@ -44,15 +36,9 @@ const Form = ({user}) => {
             itemName: capitalize(input.itemName),
             itemCalculatedAmount: Number(1),
             itemCalculatedPrice: Number(input.itemInitialPrice),
-            user: user.email
+            user: user.email,
+            archiveId: archive.length + 1
         };
-
-        if( !archiveId ) {
-            singleBillItem.archiveId = archiveItemsLength + 1;
-            setArchive({archiveId: singleBillItem.archiveId});
-        } else {
-            singleBillItem.archiveId = archiveId
-        }
 
         orderItemsDatabase.push(singleBillItem);
 
@@ -103,7 +89,8 @@ const Form = ({user}) => {
 
 const mapStateToProps = (state) => (
     {
-        user: state.userReducer.user
+        user: state.userReducer.user,
+        archive: state.archiveReducer
     }
 );
 
@@ -112,5 +99,6 @@ export default connect(
 )(Form);
 
 Form.propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
+    archive: PropTypes.array
 };
