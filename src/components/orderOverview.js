@@ -1,14 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import { orderItemsDatabase,archiveItemsDatabase } from './../utils/fireBaseUtils';
+import { orderItemsDatabase,archiveItemsDatabase, ARCHIVE } from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Archive from '@material-ui/icons/Archive';
 import Typography from '@material-ui/core/Typography';
+import firebase from '../firebase';
 import { OrderOverviewSkeleton, OrderOverviewSkeletonItem } from './styled/orderOverviewStyles'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+import Button from '@material-ui/core/Button';
+
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
 
 const OrderOverview = ({user, allItems}) => {
+
+    const [open, setOpen] = useState(false);
 
     const clearCurrentBill = () => {
 
@@ -46,13 +60,17 @@ const OrderOverview = ({user, allItems}) => {
                         });
 
                         orderItemsDatabase.update(updates);
+                        sendTotalPrice();
                     }
                     else if( typeof(console) !== 'undefined' && console.error ) {
                         console.error(error);
                     }
                 });
             }).then(() => {
-                // check what to do with old app
+                setOpen(true);
+                setTimeout(() => {
+                    setOpen(false)
+                },1500)
             });
         });
     };
@@ -99,6 +117,14 @@ const OrderOverview = ({user, allItems}) => {
     const allItemsCalculatedAmount = orderInfo().allItemsCalculatedAmount;
     const lastOrderName = orderInfo().lastOrderName;
 
+    const sendTotalPrice = () => {
+
+        allItems.forEach((item) => {
+            let ref = firebase.database().ref(`/${ARCHIVE}/${item.itemId}`);
+            ref.update({totalPrice: allItemsCalculatedPrices})
+        })
+    }
+
     return (
         <OrderOverviewSkeleton>
             { allItems.length > 0 ?
@@ -127,6 +153,19 @@ const OrderOverview = ({user, allItems}) => {
                 :
                 <Typography component="h3" color="inherit">Enter some item&#x24;</Typography>
             }
+            <Dialog
+                open={open}
+                TransitionComponent={Transition}
+                keepMounted
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle id="alert-dialog-slide-title">
+                    <Typography component="p" variant="subtitle1">
+                        Bill was added to Archive
+                    </Typography>
+                </DialogTitle>
+            </Dialog>
         </OrderOverviewSkeleton>
 
     )

@@ -47,7 +47,8 @@ export function getDataFromDbFn(user, getData, database) {
                                 currentDate: items[item].currentDate,
                                 currentTime: items[item].currentTime,
                                 user: items[item].user,
-                                archiveId: items[item].archiveId
+                                archiveId: items[item].archiveId,
+                                totalPrice: items[item].totalPrice
                             });
                         }
 

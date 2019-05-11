@@ -6,6 +6,8 @@ import {archiveItemsDatabase, ORDER_ITEMS} from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import firebase from '../firebase';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const ArchiveList = ({archiveItems, allItems, user}) => {
 
@@ -33,30 +35,46 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
     }
 
     let sortedByArchiveId = groupBy(archiveItems, 'archiveId');
+    let totalBillPrice;
+    let billDate;
 
     return(
         <>
-            {sortedByArchiveId &&
-                <ul>
-                    {Object.keys(sortedByArchiveId).map((v, i) => {
-                        return (
-                            <li key={i}>
+            {Object.keys(sortedByArchiveId).length > 0 &&
+                Object.keys(sortedByArchiveId).map((v, i) => {
+                    return (
+                        <Paper key={i} square style={{margin: '2%', padding: '3% 24px', display: 'flex', flexDirection: 'column-reverse'}}>
+                            <div>
                                 {sortedByArchiveId[v].map((vv, ii) => {
+                                    totalBillPrice = vv.totalPrice;
+                                    billDate = vv.currentDate;
                                     return (
-                                        <span key={ii}>
-                                            <h2>{vv.itemNewAmount} x {vv.itemName} = {vv.itemNewPrice}</h2>
-                                        </span>
+                                        <Typography key={ii} component="p" variant="subtitle1">
+                                            {vv.itemCalculatedAmount} x {vv.itemName} = {vv.itemCalculatedPrice}
+                                        </Typography>
                                     )
                                 })}
-                            </li>
-                        )
-                    })}
-                </ul>
+                                <Typography component="p" variant="subtitle1">
+                                    total: {totalBillPrice} czk
+                                </Typography>
+                            </div>
+                            <div>
+                                <Typography component="p" variant="subtitle1">
+                                    {billDate}
+                                </Typography>
+                            </div>
+                        </Paper>
+                    )
+                })
             }
-        <Fab size='small' color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
-            <DeleteForever />
-        </Fab>
+            {Object.keys(sortedByArchiveId).length > 0 &&
+                <div style={{padding: '3% 24px', textAlign: 'center'}}>
+                    <Fab size='small' color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
+                        <DeleteForever />
+                    </Fab>
+                </div>
 
+            }
         </>
     )
 
