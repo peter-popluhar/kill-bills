@@ -37,6 +37,7 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
     let sortedByArchiveId = groupBy(archiveItems, 'archiveId');
     let totalBillPrice;
     let billDate;
+    let billLocation;
 
     return(
         <>
@@ -48,6 +49,7 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
                                 {sortedByArchiveId[v].map((vv, ii) => {
                                     totalBillPrice = vv.totalPrice;
                                     billDate = vv.currentDate;
+                                    billLocation = vv.billLocation;
                                     return (
                                         <Typography key={ii} component="p" variant="subtitle1">
                                             {vv.itemCalculatedAmount} x {vv.itemName} = {vv.itemCalculatedPrice}
@@ -55,7 +57,10 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
                                     )
                                 })}
                                 <Typography component="p" variant="subtitle1">
-                                    total: {totalBillPrice} czk
+                                    Location: {billLocation}
+                                </Typography>
+                                <Typography component="p" variant="subtitle1">
+                                    total: {totalBillPrice}
                                 </Typography>
                             </div>
                             <div>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import { orderItemsDatabase,archiveItemsDatabase, ARCHIVE } from './../utils/fireBaseUtils';
+import { orderItemsDatabase, archiveItemsDatabase, ORDER_ITEMS, ARCHIVE } from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Archive from '@material-ui/icons/Archive';
@@ -9,18 +9,18 @@ import Typography from '@material-ui/core/Typography';
 import firebase from '../firebase';
 import { OrderOverviewSkeleton, OrderOverviewSkeletonItem } from './styled/orderOverviewStyles'
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import Button from '@material-ui/core/Button';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
 const OrderOverview = ({user, allItems}) => {
+
+    const MySwal = withReactContent(Swal);
 
     const [open, setOpen] = useState(false);
 
@@ -82,12 +82,16 @@ const OrderOverview = ({user, allItems}) => {
         let allOrdersCurrentTime = [];
         let allItemsCalculatedAmount = [];
         let lastOrderName = '';
+        let billLocations = [];
 
         allItems.forEach((item) => {
             allItemsCalculatedPrices.push(item.itemCalculatedPrice);
             allOrdersCurrentTime.push(item.currentTime);
             allItemsCalculatedAmount.push(item.itemCalculatedAmount);
+            billLocations.push(item.billLocation);
         });
+
+        let billLocation = billLocations[0];
 
         let allOrdersCurrentTimeSortedByTime = allOrdersCurrentTime.sort((a, b) => {
             return new Date('1970/01/01 ' + a) - new Date('1970/01/01 ' + b);
@@ -108,7 +112,8 @@ const OrderOverview = ({user, allItems}) => {
             allItemsCalculatedPrices: allItemsCalculatedPrices.reduce((a, b) => a + b, 0),
             lastOrderCurrentTime: lastOrderCurrentTime,
             allItemsCalculatedAmount: allItemsCalculatedAmount.reduce((a, b) => a + b, 0),
-            lastOrderName: lastOrderName
+            lastOrderName: lastOrderName,
+            billLocation: billLocation
         }
     };
 
@@ -116,6 +121,7 @@ const OrderOverview = ({user, allItems}) => {
     const lastOrderCurrentTime = orderInfo().lastOrderCurrentTime;
     const allItemsCalculatedAmount = orderInfo().allItemsCalculatedAmount;
     const lastOrderName = orderInfo().lastOrderName;
+    const billLocation = orderInfo().billLocation;
 
     const sendTotalPrice = () => {
 
@@ -125,13 +131,34 @@ const OrderOverview = ({user, allItems}) => {
         })
     }
 
+    const setBillLocation = () => {
+        let newValue;
+
+        MySwal.fire({
+            title: <Typography component="p" variant="h5">Enter location:</Typography>,
+            input: 'text'
+        }).then((result) => {
+            newValue = result.value;
+
+            if(newValue) {
+                allItems.forEach((item) => {
+                    let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
+                    ref.update({billLocation: newValue})
+                })
+            }
+        });
+    }
+
     return (
         <OrderOverviewSkeleton>
             { allItems.length > 0 ?
 
                 <>
                     <OrderOverviewSkeletonItem>
-                        <Typography component="p" variant="h5" color="inherit">
+                        <Typography component="p" variant="h5" color="inherit" onClick={setBillLocation}>
+                            {billLocation}
+                        </Typography>
+                        <Typography component="p" variant="h6" color="inherit" style={{fontWeight: '400'}}>
                             Total: {allItemsCalculatedPrices}
                         </Typography>
                         <Typography component="p" variant="subtitle1" color="inherit">

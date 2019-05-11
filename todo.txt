@@ -1,0 +1,1 @@
+1) bill name should be available in redux store

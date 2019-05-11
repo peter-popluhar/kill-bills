@@ -39,7 +39,8 @@ const Form = ({user, archive, getArchiveGroupById, archiveGrouped}) => {
             itemCalculatedAmount: Number(1),
             itemCalculatedPrice: Number(input.itemInitialPrice),
             user: user.email,
-            archiveId: Object.keys(archiveGrouped).length + 1
+            archiveId: Object.keys(archiveGrouped).length + 1,
+            billLocation: 'Bill location'
         };
 
         orderItemsDatabase.push(singleBillItem);
