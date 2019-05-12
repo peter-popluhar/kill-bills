@@ -1,2 +1,3 @@
 1) bill name should be available in redux store
 2) zjednotit let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
+3) currency pokial zmenim, tak by sa malo zmenit u nearchivovanych items tiez

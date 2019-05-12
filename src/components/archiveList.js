@@ -38,10 +38,11 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
     let totalBillPrice;
     let billDate;
     let billLocation;
+    let currency;
 
     return(
         <>
-            {Object.keys(sortedByArchiveId).length > 0 ?
+            {Object.keys(sortedByArchiveId).length > 0 &&
 
                 <>
                     {Object.keys(sortedByArchiveId).map((v, i) => {
@@ -52,20 +53,25 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
                                         totalBillPrice = vv.totalPrice;
                                         billDate = vv.currentDate;
                                         billLocation = vv.billLocation;
+                                        currency = vv.itemCurrency;
                                         return (
                                             <Typography key={ii} component="p" variant="subtitle1">
-                                                {vv.itemCalculatedAmount} x {vv.itemName} = {vv.itemCalculatedPrice}
+                                                {vv.itemCalculatedAmount} x {vv.itemName} = {vv.itemCalculatedPrice} {vv.itemCurrency}
                                             </Typography>
                                         )
                                     })}
                                     <Typography component="p" variant="subtitle1">
-                                        Location: {billLocation}
-                                    </Typography>
-                                    <Typography component="p" variant="subtitle1">
-                                        total: {totalBillPrice}
+                                        total: {totalBillPrice} {currency}
                                     </Typography>
                                 </div>
                                 <div>
+
+                                    {billLocation !== "Bill location" &&
+                                        <Typography component="p" variant="subtitle1">
+                                            Location: {billLocation}
+                                        </Typography>
+                                    }
+
                                     <Typography component="p" variant="subtitle1">
                                         {billDate}
                                     </Typography>
@@ -73,19 +79,24 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
                             </Paper>
                         )
                     })}
-                    <div style={{padding: '3% 24px', textAlign: 'center'}}>
-                        <Fab size='small' color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
-                            <DeleteForever />
-                        </Fab>
-                    </div>
-                </> :
 
-                <Paper square style={{margin: '2%', padding: '3% 24px', textAlign: 'center'}}>
-                    <Typography component="p" variant="subtitle1">
-                        Archive is empty
-                    </Typography>
-                </Paper>
+                </>
             }
+
+            <div>
+                {Object.keys(sortedByArchiveId).length === 0 &&
+                    <Paper square style={{margin: '2%', padding: '3% 24px', textAlign: 'center'}}>
+                        <Typography component="p" variant="subtitle1">
+                            Archive is empty
+                        </Typography>
+                    </Paper>
+                }
+                <div style={{padding: '3% 24px', textAlign: 'center'}}>
+                    <Fab size='small' disabled={Object.keys(sortedByArchiveId).length < 1} color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
+                        <DeleteForever />
+                    </Fab>
+                </div>
+            </div>
         </>
     )
 
@@ -105,5 +116,6 @@ export default connect(
 
 ArchiveList.propTypes = {
     archiveItems: PropTypes.array,
+    allItems: PropTypes.array,
     user: PropTypes.object
 };

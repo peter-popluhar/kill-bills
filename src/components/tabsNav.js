@@ -44,9 +44,9 @@ const TabsNav = ({archiveItems}) => {
                 />
             </Tabs>
 
-            {activeTab === 2 && <><Form /><OrderList/></>}
+            {activeTab === 0 && <><Form /><OrderList/></>}
             {activeTab === 1 && <ArchiveList />}
-            {activeTab === 0 && <SettingsPage />}
+            {activeTab === 2 && <SettingsPage />}
         </>
     )
 };

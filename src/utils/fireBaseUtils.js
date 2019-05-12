@@ -35,7 +35,8 @@ export function getDataFromDbFn(user, dispatcher, database) {
                                 currentTime: items[item].currentTime,
                                 user: items[item].user,
                                 archiveId: items[item].archiveId,
-                                billLocation: items[item].billLocation
+                                billLocation: items[item].billLocation,
+                                itemCurrency: items[item].currency
                             });
                         } else {
                             newState.push({
@@ -50,7 +51,8 @@ export function getDataFromDbFn(user, dispatcher, database) {
                                 user: items[item].user,
                                 archiveId: items[item].archiveId,
                                 totalPrice: items[item].totalPrice,
-                                billLocation: items[item].billLocation
+                                billLocation: items[item].billLocation,
+                                itemCurrency: items[item].currency
                             });
                         }
 

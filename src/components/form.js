@@ -13,7 +13,7 @@ import OrderOverview from './orderOverview';
 import Paper from '@material-ui/core/Paper';
 import { groupBy } from 'lodash';
 
-const Form = ({user, archive, getArchiveGroupById, archiveGrouped}) => {
+const Form = ({user, archive, getArchiveGroupById, archiveGrouped, currency}) => {
 
     const [input, setInputValue] = useReducer(
         (state, newState) => ({...state, ...newState}),
@@ -40,7 +40,8 @@ const Form = ({user, archive, getArchiveGroupById, archiveGrouped}) => {
             itemCalculatedPrice: Number(input.itemInitialPrice),
             user: user.email,
             archiveId: Object.keys(archiveGrouped).length + 1,
-            billLocation: 'Bill location'
+            billLocation: 'Bill location',
+            currency: currency
         };
 
         orderItemsDatabase.push(singleBillItem);
@@ -110,7 +111,8 @@ const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
         archive: state.archiveReducer,
-        archiveGrouped: state.archiveGroupByIdReducer
+        archiveGrouped: state.archiveGroupByIdReducer,
+        currency: state.settingsReducer.currency
     }
 );
 
@@ -121,6 +123,8 @@ export default connect(
 
 Form.propTypes = {
     user: PropTypes.object,
+    currency: PropTypes.string,
     archive: PropTypes.array,
-    getArchiveGroupById: PropTypes.func
+    getArchiveGroupById: PropTypes.func,
+    archiveGrouped: PropTypes.object
 };

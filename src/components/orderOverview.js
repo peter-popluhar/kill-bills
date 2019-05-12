@@ -19,7 +19,7 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
-const OrderOverview = ({user, allItems}) => {
+const OrderOverview = ({user, allItems, currency}) => {
 
     const MySwal = withReactContent(Swal);
 
@@ -160,7 +160,7 @@ const OrderOverview = ({user, allItems}) => {
                             {billLocation} <TouchApp />
                         </Typography>
                         <Typography component="p" variant="h6" color="inherit" style={{fontWeight: '400'}}>
-                            Total: {allItemsCalculatedPrices}
+                            Total: {allItemsCalculatedPrices} {currency}
                         </Typography>
                         <Typography component="p" variant="subtitle1" color="inherit">
                             Items: {allItemsCalculatedAmount}
@@ -203,7 +203,8 @@ const OrderOverview = ({user, allItems}) => {
 const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
-        allItems: state.ordersReducer
+        allItems: state.ordersReducer,
+        currency: state.settingsReducer.currency
     }
 );
 
@@ -213,5 +214,6 @@ export default connect(
 
 OrderOverview.propTypes = {
     allItems: PropTypes.array,
-    user: PropTypes.object
+    user: PropTypes.object,
+    currency: PropTypes.string
 };

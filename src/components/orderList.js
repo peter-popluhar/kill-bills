@@ -117,7 +117,7 @@ const OrderList = ({allItems}) => {
                                                {item.itemName}
                                            </Typography>
                                            <Typography component="p" variant="subtitle1">
-                                               {item.itemCalculatedAmount} x {item.itemInitialPrice} = {item.itemCalculatedPrice}
+                                               {item.itemCalculatedAmount} x {item.itemInitialPrice} {item.itemCurrency} = {item.itemCalculatedPrice}
                                            </Typography>
                                            <Typography component="p" variant="subtitle2">
                                                {item.currentTime}
