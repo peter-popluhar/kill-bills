@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Form from './form';
 import OrderList from './orderList';
 import ArchiveList from './archiveList';
+import SettingsPage from './settings';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ViewList from '@material-ui/icons/ViewList';
@@ -43,9 +44,9 @@ const TabsNav = ({archiveItems}) => {
                 />
             </Tabs>
 
-            {activeTab === 0 && <><Form /><OrderList/></>}
+            {activeTab === 2 && <><Form /><OrderList/></>}
             {activeTab === 1 && <ArchiveList />}
-            {activeTab === 2 && <Settings />}
+            {activeTab === 0 && <SettingsPage />}
         </>
     )
 };

@@ -1,1 +1,2 @@
 1) bill name should be available in redux store
+2) zjednotit let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);

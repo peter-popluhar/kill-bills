@@ -5,7 +5,7 @@ export const ARCHIVE = 'archive';
 export const orderItemsDatabase = firebase.database().ref(ORDER_ITEMS);
 export const archiveItemsDatabase = firebase.database().ref(ARCHIVE);
 
-export function getDataFromDbFn(user, getData, database) {
+export function getDataFromDbFn(user, dispatcher, database) {
 
     if(user) {
         database.on('value', (snapshot) => {
@@ -57,8 +57,31 @@ export function getDataFromDbFn(user, getData, database) {
                     }
                 }
             }
-
-            getData(newState);
+            dispatcher(newState);
         });
     }
 }
+
+export const getUserSettings = (user, dispatcher, settingItem) => {
+
+    if ( user ) {
+
+        firebase.database().ref('settings/' + settingItem + '/' + user.uid).on('value', (snapshot) => {
+            let settings = {};
+
+            let settingSnapshot = snapshot.val();
+
+            if ( settingSnapshot !== null ) {
+                let value = settingItem;
+
+                for( let key in settingSnapshot) {
+
+                    if(settingSnapshot.hasOwnProperty(key)) {
+                        value = settingSnapshot[key];
+                    }
+                }
+                dispatcher(settings.settingItem = value)
+            }
+        });
+    }
+};

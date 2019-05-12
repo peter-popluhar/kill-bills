@@ -41,44 +41,50 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
 
     return(
         <>
-            {Object.keys(sortedByArchiveId).length > 0 &&
-                Object.keys(sortedByArchiveId).map((v, i) => {
-                    return (
-                        <Paper key={i} square style={{margin: '2%', padding: '3% 24px', display: 'flex', flexDirection: 'column-reverse'}}>
-                            <div>
-                                {sortedByArchiveId[v].map((vv, ii) => {
-                                    totalBillPrice = vv.totalPrice;
-                                    billDate = vv.currentDate;
-                                    billLocation = vv.billLocation;
-                                    return (
-                                        <Typography key={ii} component="p" variant="subtitle1">
-                                            {vv.itemCalculatedAmount} x {vv.itemName} = {vv.itemCalculatedPrice}
-                                        </Typography>
-                                    )
-                                })}
-                                <Typography component="p" variant="subtitle1">
-                                    Location: {billLocation}
-                                </Typography>
-                                <Typography component="p" variant="subtitle1">
-                                    total: {totalBillPrice}
-                                </Typography>
-                            </div>
-                            <div>
-                                <Typography component="p" variant="subtitle1">
-                                    {billDate}
-                                </Typography>
-                            </div>
-                        </Paper>
-                    )
-                })
-            }
-            {Object.keys(sortedByArchiveId).length > 0 &&
-                <div style={{padding: '3% 24px', textAlign: 'center'}}>
-                    <Fab size='small' color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
-                        <DeleteForever />
-                    </Fab>
-                </div>
+            {Object.keys(sortedByArchiveId).length > 0 ?
 
+                <>
+                    {Object.keys(sortedByArchiveId).map((v, i) => {
+                        return (
+                            <Paper key={i} square style={{margin: '2%', padding: '3% 24px', display: 'flex', flexDirection: 'column-reverse'}}>
+                                <div>
+                                    {sortedByArchiveId[v].map((vv, ii) => {
+                                        totalBillPrice = vv.totalPrice;
+                                        billDate = vv.currentDate;
+                                        billLocation = vv.billLocation;
+                                        return (
+                                            <Typography key={ii} component="p" variant="subtitle1">
+                                                {vv.itemCalculatedAmount} x {vv.itemName} = {vv.itemCalculatedPrice}
+                                            </Typography>
+                                        )
+                                    })}
+                                    <Typography component="p" variant="subtitle1">
+                                        Location: {billLocation}
+                                    </Typography>
+                                    <Typography component="p" variant="subtitle1">
+                                        total: {totalBillPrice}
+                                    </Typography>
+                                </div>
+                                <div>
+                                    <Typography component="p" variant="subtitle1">
+                                        {billDate}
+                                    </Typography>
+                                </div>
+                            </Paper>
+                        )
+                    })}
+                    <div style={{padding: '3% 24px', textAlign: 'center'}}>
+                        <Fab size='small' color='secondary' aria-label='clear archive orders' onClick={clearArchive}>
+                            <DeleteForever />
+                        </Fab>
+                    </div>
+                </> :
+
+                <Paper square style={{margin: '2%', padding: '3% 24px', textAlign: 'center'}}>
+                    <Typography component="p" variant="subtitle1">
+                        Archive is empty
+                    </Typography>
+                </Paper>
             }
         </>
     )

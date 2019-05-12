@@ -2,9 +2,15 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { auth } from './firebase.js';
 import Header from './components/header';
-import { getUserAction, getOrdersFromDbAction, getArchiveFromDbAction } from './appAction';
+import {
+    getUserAction,
+    getOrdersFromDbAction,
+    getArchiveFromDbAction,
+    currencyAction,
+    themeAction
+} from './appAction';
 import { connect } from 'react-redux';
-import { getDataFromDbFn, archiveItemsDatabase, orderItemsDatabase } from './utils/fireBaseUtils';
+import { getDataFromDbFn, archiveItemsDatabase, orderItemsDatabase, getUserSettings } from './utils/fireBaseUtils';
 import HeaderNotLogged from './components/headerNotLogged';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
@@ -21,7 +27,7 @@ const theme = createMuiTheme({
     },
 });
 
-const App = ({ user, getUser, getOrders, getArchive }) => {
+const App = ({ user, getUser, getOrders, getArchive, getCurrency, getTheme }) => {
 
     // if user is logged, send him to redux store
     const getUserFn = () => {
@@ -32,10 +38,16 @@ const App = ({ user, getUser, getOrders, getArchive }) => {
         });
     };
 
+    const getUserSettingsFn = () => {
+        getCurrency(getUserSettings(user, getCurrency, 'currency'));
+        getTheme(getUserSettings(user, getTheme, 'theme'))
+    }
+
     useEffect(() => {
         getUserFn();
         getDataFromDbFn(user, getOrders, orderItemsDatabase);
         getDataFromDbFn(user, getArchive, archiveItemsDatabase);
+        getUserSettingsFn()
     },[user]);
 
     return (
@@ -60,15 +72,15 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getUser: (user) => dispatch(getUserAction(user)),
         getOrders: (orders) => dispatch(getOrdersFromDbAction(orders)),
-        getArchive: (archive) => dispatch(getArchiveFromDbAction(archive))
+        getArchive: (archive) => dispatch(getArchiveFromDbAction(archive)),
+        getCurrency: (currency) => dispatch(currencyAction(currency)),
+        getTheme: (theme) => dispatch(themeAction(theme))
     }
 };
 
 const mapStateToProps = (state) => (
     {
-        user: state.userReducer.user,
-        orders: state.ordersReducer,
-        archive: state.archiveReducer
+        user: state.userReducer.user
     }
 );
 
@@ -81,5 +93,7 @@ App.propTypes = {
     user: PropTypes.object,
     getUser: PropTypes.func,
     getOrders: PropTypes.func,
-    getArchive: PropTypes.func
+    getArchive: PropTypes.func,
+    getCurrency: PropTypes.func,
+    getTheme: PropTypes.func
 };

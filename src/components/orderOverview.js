@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import TouchApp from '@material-ui/icons/TouchApp';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -156,7 +157,7 @@ const OrderOverview = ({user, allItems}) => {
                 <>
                     <OrderOverviewSkeletonItem>
                         <Typography component="p" variant="h5" color="inherit" onClick={setBillLocation}>
-                            {billLocation}
+                            {billLocation} <TouchApp />
                         </Typography>
                         <Typography component="p" variant="h6" color="inherit" style={{fontWeight: '400'}}>
                             Total: {allItemsCalculatedPrices}
