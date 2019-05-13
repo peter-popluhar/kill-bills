@@ -11,15 +11,15 @@ import FormLabel from '@material-ui/core/FormLabel';
 import { connect } from 'react-redux';
 import { ORDER_ITEMS } from './../utils/fireBaseUtils';
 
-const CurencySettings = ({user, currency, allItems}) => {
+const ThemeSettings = ({user, theme, allItems}) => {
 
 
-    const handleCurrency = (e) => {
+    const handleTheme = (e) => {
         let value = e.target.value;
-        firebase.database().ref('settings/currency/' + user.uid).update({currency: value}).then(() => {
+        firebase.database().ref('settings/theme/' + user.uid).update({theme: value}).then(() => {
             allItems.forEach((item) => {
                 let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
-                ref.update({currency: value})
+                ref.update({theme: value})
             })
         });
     }
@@ -31,18 +31,18 @@ const CurencySettings = ({user, currency, allItems}) => {
                 <FormControl component="fieldset">
                     <FormLabel component="legend">
                         <Typography component="p" variant="subtitle1">
-                            Currency is: {currency}
+                            Theme is: {theme}
                         </Typography>
                     </FormLabel>
 
                     <RadioGroup
-                        aria-label="Currency"
-                        name="currency"
-                        value={currency}
-                        onChange={handleCurrency}
+                        aria-label="Theme"
+                        name="theme"
+                        value={theme}
+                        onChange={handleTheme}
                     >
-                        <FormControlLabel value="CZK" control={<Radio color="primary" checked={currency === "CZK"}/>} label="CZK" />
-                        <FormControlLabel value="EUR" control={<Radio color="primary" checked={currency === "EUR"} />} label="EUR" />
+                        <FormControlLabel value="Light" control={<Radio color="primary" checked={theme === "Light"}/>} label="Light" />
+                        <FormControlLabel value="Dark" control={<Radio color="primary" checked={theme === "Dark"} />} label="Dark" />
                     </RadioGroup>
                 </FormControl>
             </div>
@@ -54,17 +54,17 @@ const CurencySettings = ({user, currency, allItems}) => {
 const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
-        currency: state.settingsReducer.currency,
+        theme: state.settingsReducer.theme,
         allItems: state.ordersReducer
     }
 );
 
 export default connect(
     mapStateToProps
-)(CurencySettings);
+)(ThemeSettings);
 
-CurencySettings.propTypes = {
-    currency: PropTypes.string,
+ThemeSettings.propTypes = {
+    theme: PropTypes.string,
     user: PropTypes.object,
     allItems: PropTypes.array
 };
