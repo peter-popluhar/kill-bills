@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { groupBy } from 'lodash';
-import {archiveItemsDatabase, ORDER_ITEMS} from './../utils/fireBaseUtils';
+import {databaseRef, ORDER_ITEMS, ARCHIVE} from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
-import firebase from '../firebase';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
@@ -13,14 +12,14 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
 
     const clearArchive = () => {
 
-        archiveItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+        databaseRef(ARCHIVE).orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
                 updates[child.key] = null;
             });
 
-            archiveItemsDatabase.update(updates);
+            databaseRef(ARCHIVE).update(updates);
         });
 
         clearOrdersArchiveId()
@@ -29,8 +28,7 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
     const clearOrdersArchiveId = () => {
 
         allItems.forEach((item) => {
-            let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
-           ref.update({archiveId: 1})
+            databaseRef(`/${ORDER_ITEMS}/${item.itemId}`).update({archiveId: 1})
         })
     }
 

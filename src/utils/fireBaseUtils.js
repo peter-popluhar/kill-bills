@@ -2,8 +2,8 @@ import firebase from './../firebase.js';
 
 export const ORDER_ITEMS = 'orderItems';
 export const ARCHIVE = 'archive';
-export const orderItemsDatabase = firebase.database().ref(ORDER_ITEMS);
-export const archiveItemsDatabase = firebase.database().ref(ARCHIVE);
+
+export function databaseRef(path) { return firebase.database().ref(path)}
 
 export function getDataFromDbFn(user, dispatcher, database) {
 
@@ -23,7 +23,7 @@ export function getDataFromDbFn(user, dispatcher, database) {
                     if (user.email === userName) {
                         items[item] = order;
 
-                        if(database === orderItemsDatabase) {
+                        if(database === databaseRef(ORDER_ITEMS)) {
                             newState.unshift({
                                 itemId: item,
                                 itemName: items[item].itemName,
@@ -68,7 +68,7 @@ export const getUserSettings = (user, dispatcher, settingItem) => {
 
     if ( user ) {
 
-        firebase.database().ref('settings/' + settingItem + '/' + user.uid).on('value', (snapshot) => {
+        databaseRef('settings/' + settingItem + '/' + user.uid).on('value', (snapshot) => {
             let settings = {};
 
             let settingSnapshot = snapshot.val();

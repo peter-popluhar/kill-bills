@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import firebase from './../firebase.js';
 import {connect} from 'react-redux';
-import { ORDER_ITEMS } from './../utils/fireBaseUtils';
+import {databaseRef, ORDER_ITEMS } from './../utils/fireBaseUtils';
 import { getCurrentItemTime } from './../utils/appUtils';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -33,7 +32,7 @@ const OrderList = ({allItems}) => {
     const MySwal = withReactContent(Swal);
 
     const manipulateItem = (itemId, action) => {
-        const itemRef = firebase.database().ref(`/${ORDER_ITEMS}/${itemId}`);
+        const itemRef = databaseRef(`/${ORDER_ITEMS}/${itemId}`);
 
         allItems.forEach((item) => {
 

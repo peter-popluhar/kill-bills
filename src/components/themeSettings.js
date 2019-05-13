@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { connect } from 'react-redux';
-import { ORDER_ITEMS } from './../utils/fireBaseUtils';
+import {databaseRef, ORDER_ITEMS } from './../utils/fireBaseUtils';
 
 const ThemeSettings = ({user, theme, allItems}) => {
 
@@ -18,8 +18,7 @@ const ThemeSettings = ({user, theme, allItems}) => {
         let value = e.target.value;
         firebase.database().ref('settings/theme/' + user.uid).update({theme: value}).then(() => {
             allItems.forEach((item) => {
-                let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
-                ref.update({theme: value})
+                databaseRef(`/${ORDER_ITEMS}/${item.itemId}`).update({theme: value})
             })
         });
     }

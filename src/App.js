@@ -10,7 +10,7 @@ import {
     themeAction
 } from './appAction';
 import { connect } from 'react-redux';
-import { getDataFromDbFn, archiveItemsDatabase, orderItemsDatabase, getUserSettings } from './utils/fireBaseUtils';
+import { getDataFromDbFn, getUserSettings, databaseRef, ORDER_ITEMS, ARCHIVE } from './utils/fireBaseUtils';
 import HeaderNotLogged from './components/headerNotLogged';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
@@ -45,8 +45,8 @@ const App = ({ user, getUser, getOrders, getArchive, getCurrency, getTheme }) =>
 
     useEffect(() => {
         getUserFn();
-        getDataFromDbFn(user, getOrders, orderItemsDatabase);
-        getDataFromDbFn(user, getArchive, archiveItemsDatabase);
+        getDataFromDbFn(user, getOrders, databaseRef(ORDER_ITEMS));
+        getDataFromDbFn(user, getArchive, databaseRef(ARCHIVE));
         getUserSettingsFn()
     },[user]);
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { capitalize } from 'lodash';
 import {connect} from 'react-redux';
 import { archiveItemsGroupByIdAction } from './../appAction';
-import { orderItemsDatabase } from './../utils/fireBaseUtils';
+import { databaseRef, ORDER_ITEMS } from './../utils/fireBaseUtils';
 import { getOrderDate,getCurrentItemTime } from './../utils/appUtils';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
@@ -44,7 +44,7 @@ const Form = ({user, archive, getArchiveGroupById, archiveGrouped, currency}) =>
             currency: currency
         };
 
-        orderItemsDatabase.push(singleBillItem);
+        databaseRef(ORDER_ITEMS).push(singleBillItem);
 
         setInputValue({
             itemName: '',

@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import { orderItemsDatabase, archiveItemsDatabase, ORDER_ITEMS, ARCHIVE } from './../utils/fireBaseUtils';
+import { databaseRef,  ORDER_ITEMS, ARCHIVE } from './../utils/fireBaseUtils';
 import Fab from '@material-ui/core/Fab';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Archive from '@material-ui/icons/Archive';
 import Typography from '@material-ui/core/Typography';
-import firebase from '../firebase';
 import { OrderOverviewSkeleton, OrderOverviewSkeletonItem } from './styled/orderOverviewStyles'
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -27,14 +26,14 @@ const OrderOverview = ({user, allItems, currency}) => {
 
     const clearCurrentBill = () => {
 
-        orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+        databaseRef(ORDER_ITEMS).orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             let updates = {};
 
             snapshot.forEach(function(child) {
                 updates[child.key] = null;
             });
 
-            orderItemsDatabase.update(updates);
+            databaseRef(ORDER_ITEMS).update(updates);
         });
     };
 
@@ -43,15 +42,15 @@ const OrderOverview = ({user, allItems, currency}) => {
 
         let keys = [];
 
-        orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot){
+        databaseRef(ORDER_ITEMS).orderByChild('user').equalTo(user.email).once('value', function(snapshot){
             snapshot.forEach(function(child) {
                 keys.push([child.key]);
             });
         }).then(() => {
 
-            orderItemsDatabase.orderByChild('user').equalTo(user.email).once('value', function(snapshot)  {
+            databaseRef(ORDER_ITEMS).orderByChild('user').equalTo(user.email).once('value', function(snapshot)  {
 
-                archiveItemsDatabase.update( snapshot.val(), function(error) {
+                databaseRef(ARCHIVE).update( snapshot.val(), function(error) {
 
                     if( !error ) {
                         let updates = {};
@@ -60,7 +59,7 @@ const OrderOverview = ({user, allItems, currency}) => {
                             updates[child.key] = null;
                         });
 
-                        orderItemsDatabase.update(updates);
+                        databaseRef(ORDER_ITEMS).update(updates);
                         sendTotalPrice();
                     }
                     else if( typeof(console) !== 'undefined' && console.error ) {
@@ -127,8 +126,7 @@ const OrderOverview = ({user, allItems, currency}) => {
     const sendTotalPrice = () => {
 
         allItems.forEach((item) => {
-            let ref = firebase.database().ref(`/${ARCHIVE}/${item.itemId}`);
-            ref.update({totalPrice: allItemsCalculatedPrices})
+            databaseRef(`/${ARCHIVE}/${item.itemId}`).update({totalPrice: allItemsCalculatedPrices})
         })
     }
 
@@ -143,8 +141,7 @@ const OrderOverview = ({user, allItems, currency}) => {
 
             if(newValue) {
                 allItems.forEach((item) => {
-                    let ref = firebase.database().ref(`/${ORDER_ITEMS}/${item.itemId}`);
-                    ref.update({billLocation: newValue})
+                    databaseRef(`/${ORDER_ITEMS}/${item.itemId}`).update({billLocation: newValue})
                 })
             }
         });
