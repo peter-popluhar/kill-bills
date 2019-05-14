@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
+import {LOG_OUT} from './appAction'
 import { userReducer, ordersReducer, archiveReducer, archiveGroupByIdReducer, settingsReducer, locationReducer } from './appReducer';
 
-export default combineReducers({
+export const appReducer = combineReducers({
 	userReducer,
 	ordersReducer,
 	archiveReducer,
@@ -9,3 +10,10 @@ export default combineReducers({
 	settingsReducer,
 	locationReducer
 })
+
+export const rootReducer = (state, action) => {
+	if(action.type === LOG_OUT) {
+		state = undefined
+	}
+	return appReducer(state, action)
+};

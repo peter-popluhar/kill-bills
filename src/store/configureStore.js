@@ -1,7 +1,7 @@
 import {createStore} from 'redux';
-import combineReducers from './../rootReducer';
+import {rootReducer} from './../rootReducer';
 
 export function configureStore(initialState = {}) {
 	const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-	return createStore(combineReducers, initialState, composeEnhancer());
+	return createStore(rootReducer, initialState, composeEnhancer());
 }
