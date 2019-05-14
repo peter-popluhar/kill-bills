@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {databaseRef, ORDER_ITEMS } from './../utils/fireBaseUtils';
@@ -18,6 +18,9 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import {
+    locationAction
+} from './../appAction';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
@@ -25,7 +28,7 @@ const DELETE = 'delete';
 const CHANGE_ITEM_NAME = 'changeItemName';
 const CHANGE_ITEM_PRICE = 'changeItemPrice';
 
-const OrderList = ({allItems}) => {
+const OrderList = ({allItems, getLocation}) => {
     let itemCalculatedPrice;
     let itemCalculatedAmount;
     let newValue;
@@ -101,6 +104,23 @@ const OrderList = ({allItems}) => {
         });
     };
 
+    useEffect(()=> {
+        let location = '';
+        const getLocationFn = () => {
+
+            let locations = [];
+            if (allItems.length > 0) {
+                allItems.map((v) => {
+                    locations.push(v.billLocation)
+                    return location = locations[0]
+                })
+                getLocation(location)
+            }
+        }
+
+        getLocationFn()
+    }, [getLocation, allItems])
+
    return (
        <>
            {allItems &&
@@ -143,6 +163,12 @@ const OrderList = ({allItems}) => {
    )
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getLocation: (location) => dispatch(locationAction(location))
+    }
+}
+
 const mapStateToProps = (state) => {
     return {
         allItems: state.ordersReducer
@@ -150,7 +176,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(OrderList);
 
 OrderList.propTypes = {

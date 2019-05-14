@@ -5,7 +5,8 @@ import {
 	GET_DATA_ARCHIVE_FROM_DB,
 	ARCHIVE_ITEMS_GROUP_BY_ID,
 	CURRENCY,
-	THEME
+	THEME,
+	LOCATION
 } from './appAction';
 
 export const userReducer = (state = {user: null}, action) => {
@@ -61,6 +62,17 @@ export const settingsReducer = (state = {currency: null, theme: null}, action) =
 		case THEME: {
 			return {
 				...state, theme: action.payload
+			}
+		}
+		default: return state
+	}
+}
+
+export const locationReducer = (state = {billLocation: null}, action) => {
+	switch (action.type) {
+		case LOCATION: {
+			return {
+				...state, billLocation: action.payload
 			}
 		}
 		default: return state

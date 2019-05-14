@@ -5,6 +5,7 @@ export const GET_DATA_ARCHIVE_FROM_DB = 'GET_DATA_ARCHIVE_FROM_DB';
 export const ARCHIVE_ITEMS_GROUP_BY_ID = 'ARCHIVE_ITEMS_GROUP_BY_ID';
 export const CURRENCY = 'CURRENCY';
 export const THEME = 'THEME';
+export const LOCATION = 'LOCATION';
 
 export const getUserAction = (payload) => {
 	return {
@@ -50,6 +51,13 @@ export const currencyAction = (payload) => {
 export const themeAction = (payload) => {
 	return {
 		type: THEME,
+		payload
+	}
+};
+
+export const locationAction = (payload) => {
+	return {
+		type: LOCATION,
 		payload
 	}
 };
