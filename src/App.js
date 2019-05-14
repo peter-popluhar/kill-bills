@@ -29,26 +29,26 @@ const theme = createMuiTheme({
 
 const App = ({ user, getUser, getOrders, getArchive, getCurrency, getTheme }) => {
 
-    // if user is logged, send him to redux store
-    const getUserFn = () => {
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                getUser(user);
-            }
-        });
-    };
-
-    const getUserSettingsFn = () => {
-        getCurrency(getUserSettings(user, getCurrency, 'currency'));
-        getTheme(getUserSettings(user, getTheme, 'theme'))
-    }
-
     useEffect(() => {
+
+        const getUserFn = () => {
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    getUser(user);
+                }
+            });
+        };
+
+        const getUserSettingsFn = () => {
+            getCurrency(getUserSettings(user, getCurrency, 'currency'));
+            getTheme(getUserSettings(user, getTheme, 'theme'))
+        }
+
         getUserFn();
         getDataFromDbFn(user, getOrders, databaseRef(ORDER_ITEMS));
         getDataFromDbFn(user, getArchive, databaseRef(ARCHIVE));
         getUserSettingsFn()
-    },[user]);
+    },[user, getArchive, getOrders, getUser, getCurrency, getTheme]);
 
     return (
         <MuiThemeProvider theme={theme}>

@@ -52,13 +52,15 @@ const Form = ({user, archive, getArchiveGroupById, archiveGrouped, currency}) =>
         })
     };
 
-    const getArchiveLengthFn = () => {
-        getArchiveGroupById(groupBy(archive, 'archiveId'));
-    };
+
 
     useEffect(() => {
+        const getArchiveLengthFn = () => {
+            getArchiveGroupById(groupBy(archive, 'archiveId'));
+        };
+
         getArchiveLengthFn();
-    },[archive]);
+    },[archive, getArchiveGroupById]);
 
     return (
         <Paper square style={{padding: '24px', margin: '2%'}}>
