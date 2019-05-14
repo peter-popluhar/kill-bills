@@ -106,7 +106,7 @@ const OrderList = ({allItems}) => {
            {allItems &&
 
                <>
-                   {allItems.map((item) => {
+                   {allItems.slice(0).reverse().map((item) => {
                        return(
                            <Paper key={item.itemId} square style={{margin: '2%'}}>
                                <ExpansionPanel>
@@ -116,7 +116,7 @@ const OrderList = ({allItems}) => {
                                                {item.itemName}
                                            </Typography>
                                            <Typography component="p" variant="subtitle1">
-                                               {item.itemCalculatedAmount} x {item.itemInitialPrice} {item.itemCurrency} = {item.itemCalculatedPrice}
+                                               {item.itemCalculatedAmount} x {item.itemInitialPrice} = {item.itemCalculatedPrice} {item.itemCurrency}
                                            </Typography>
                                            <Typography component="p" variant="subtitle2">
                                                {item.currentTime}

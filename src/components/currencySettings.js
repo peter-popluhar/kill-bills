@@ -22,7 +22,6 @@ const CurencySettings = ({user, currency, allItems}) => {
         });
     }
 
-
     return(
         <Paper style={{margin: '2%', padding: '3% 24px'}}>
             <div>

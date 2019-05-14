@@ -67,23 +67,34 @@ export function getDataFromDbFn(user, dispatcher, database) {
 export const getUserSettings = (user, dispatcher, settingItem) => {
 
     if ( user ) {
+        const ref = databaseRef('settings/' + settingItem + '/' + user.uid);
 
-        databaseRef('settings/' + settingItem + '/' + user.uid).on('value', (snapshot) => {
-            let settings = {};
+        if (ref) {
+            ref.on('value', (snapshot) => {
+                let settings = {};
 
-            let settingSnapshot = snapshot.val();
+                let settingSnapshot = snapshot.val();
 
-            if ( settingSnapshot !== null ) {
-                let value = settingItem;
+                if ( settingSnapshot !== null ) {
+                    let value = settingItem;
 
-                for( let key in settingSnapshot) {
+                    for( let key in settingSnapshot) {
 
-                    if(settingSnapshot.hasOwnProperty(key)) {
-                        value = settingSnapshot[key];
+                        if(settingSnapshot.hasOwnProperty(key)) {
+                            value = settingSnapshot[key];
+                        }
+                    }
+                    dispatcher(settings.settingItem = value)
+                } else {
+                    if(settingItem === 'currency') {
+                        dispatcher(settings.settingItem = 'CZK')
+                    }
+                    if(settingItem === 'theme') {
+                        dispatcher(settings.settingItem = 'Light')
                     }
                 }
-                dispatcher(settings.settingItem = value)
-            }
-        });
+            });
+        }
+
     }
 };
