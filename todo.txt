@@ -1,4 +1,7 @@
+remove user email from order
+clean items from redux - after logout/login some stays in (location)
 login page
 gdpr
 log version
 about
+

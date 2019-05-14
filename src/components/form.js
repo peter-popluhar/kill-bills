@@ -40,7 +40,7 @@ const Form = ({user, archive, getArchiveGroupById, archiveGrouped, currency, bil
             itemCalculatedPrice: Number(input.itemInitialPrice),
             user: user.email,
             archiveId: Object.keys(archiveGrouped).length + 1,
-            billLocation: billLocation,
+            billLocation: billLocation ? billLocation : 'Bill Location',
             currency: currency
         };
 
