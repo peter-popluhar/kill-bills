@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/kill-bills-2/precache-manifest.e2182f74dab4f025bec3d084fe280634.js"
+  "/kill-bills-v1/precache-manifest.b30bf9ded7bb17095755ccd22f3b1628.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/kill-bills-2/index.html", {
+workbox.routing.registerNavigationRoute("/kill-bills-v1/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
