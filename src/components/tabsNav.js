@@ -12,6 +12,7 @@ import Badge from '@material-ui/core/Badge';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { groupBy } from 'lodash';
+import Grid from '@material-ui/core/Grid';
 
 const TabsNav = ({archiveItems}) => {
     const [activeTab, setActiveTab] = useState(0);
@@ -24,29 +25,37 @@ const TabsNav = ({archiveItems}) => {
 
     return(
         <>
-            <Tabs variant='fullWidth' color="primary"
-                  centered
-                  value={activeTab}
-                  onChange={handleChange}
-            >
-                <Tab label='Orders'
-                     icon={<ViewList />}
-                />
-                <Tab label={
-                        <Badge style={{paddingRight: '10px'}} badgeContent={sortedByArchiveId}>
-                            Archive
-                        </Badge>
-                    }
-                    icon={<Archive />}
-                />
-                <Tab label='Settings'
-                     icon={<Settings />}
-                />
-            </Tabs>
+            <Grid container justify={'center'}>
+                <Grid item xs={12} md={6}>
+                    <Tabs variant='fullWidth' color="primary"
+                          centered
+                          value={activeTab}
+                          onChange={handleChange}
+                    >
+                        <Tab label='Orders'
+                             icon={<ViewList />}
+                        />
+                        <Tab label={
+                                <Badge style={{paddingRight: '10px'}} badgeContent={sortedByArchiveId}>
+                                    Archive
+                                </Badge>
+                            }
+                            icon={<Archive />}
+                        />
+                        <Tab label='Settings'
+                             icon={<Settings />}
+                        />
+                    </Tabs>
+                </Grid>
+            </Grid>
 
-            {activeTab === 0 && <><Form /><OrderList/></>}
-            {activeTab === 1 && <ArchiveList />}
-            {activeTab === 2 && <SettingsPage />}
+            <Grid container justify={'center'}>
+                <Grid item xs={12} sm={8} md={6}>
+                    {activeTab === 0 && <><Form /><OrderList/></>}
+                    {activeTab === 1 && <ArchiveList />}
+                    {activeTab === 2 && <SettingsPage />}
+                </Grid>
+            </Grid>
         </>
     )
 };
