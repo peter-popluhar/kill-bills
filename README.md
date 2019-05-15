@@ -2,7 +2,7 @@
 
 ## About KillBill$
 
-[https://peter-popluhar.github.io/kill-bills/](https://peter-popluhar.github.io/kill-bills/)
+[https://peter-popluhar.github.io/kill-bills-v1/](https://peter-popluhar.github.io/kill-bills/)
 
 KillBill$ is simple web application.
 
