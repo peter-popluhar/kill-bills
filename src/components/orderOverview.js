@@ -13,27 +13,27 @@ import Slide from '@material-ui/core/Slide';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import TouchApp from '@material-ui/icons/TouchApp';
+import {locationAction} from './../appAction';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
-const OrderOverview = ({user, allItems, currency}) => {
+const OrderOverview = ({user, allItems, currency, getLocation}) => {
 
     const MySwal = withReactContent(Swal);
 
     const [open, setOpen] = useState(false);
 
     const clearCurrentBill = () => {
-
+        let updates = {};
         databaseRef(ORDER_ITEMS).orderByChild('user').equalTo(user.email).once('value', function(snapshot){
-            let updates = {};
-
             snapshot.forEach(function(child) {
                 updates[child.key] = null;
             });
-
+        }).then(() => {
             databaseRef(ORDER_ITEMS).update(updates);
+            getLocation('')
         });
     };
 
@@ -71,6 +71,7 @@ const OrderOverview = ({user, allItems, currency}) => {
                 setTimeout(() => {
                     setOpen(false)
                 },1500)
+                getLocation('')
             });
         });
     };
@@ -197,6 +198,12 @@ const OrderOverview = ({user, allItems, currency}) => {
 
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getLocation: (location) => dispatch(locationAction(location))
+    }
+}
+
 const mapStateToProps = (state) => (
     {
         user: state.userReducer.user,
@@ -206,7 +213,8 @@ const mapStateToProps = (state) => (
 );
 
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(OrderOverview);
 
 OrderOverview.propTypes = {

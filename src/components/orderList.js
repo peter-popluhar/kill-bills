@@ -18,9 +18,7 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import {
-    locationAction
-} from './../appAction';
+import {locationAction} from './../appAction';
 
 const INCREMENT = 'increment';
 const DECREMENT = 'decrement';
