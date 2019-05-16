@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/kill-bills-v1/precache-manifest.d4d53ad1aef661ba40c62d237aa01660.js"
+  "/kill-bills-v1/precache-manifest.5a840c36ee2fab28eb4fb7a74aeb1cec.js"
 );
 
 self.addEventListener('message', (event) => {
