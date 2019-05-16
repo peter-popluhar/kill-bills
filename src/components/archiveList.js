@@ -43,7 +43,7 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
             {Object.keys(sortedByArchiveId).length > 0 &&
 
                 <>
-                    {Object.keys(sortedByArchiveId).map((v, i) => {
+                    {Object.keys(sortedByArchiveId).slice(0).reverse().map((v, i) => {
                         return (
                             <Paper key={i} square style={{margin: '2%', padding: '3% 24px', display: 'flex', flexDirection: 'column-reverse'}}>
                                 <div>
@@ -63,16 +63,14 @@ const ArchiveList = ({archiveItems, allItems, user}) => {
                                     </Typography>
                                 </div>
                                 <div>
-
-                                    {billLocation !== "Bill location" &&
-                                        <Typography component="p" variant="subtitle1">
-                                            Location: {billLocation}
-                                        </Typography>
-                                    }
-
                                     <Typography component="p" variant="subtitle1">
                                         {billDate}
                                     </Typography>
+                                    {billLocation !== "Bill Location" &&
+                                        <Typography component="p" variant="subtitle1">
+                                            {billLocation}
+                                        </Typography>
+                                    }
                                 </div>
                             </Paper>
                         )
